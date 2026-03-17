@@ -17,7 +17,7 @@ Este proyecto nace como una solución tecnológica diseñada para empresas que n
 
 ## 🛠️ Tecnologías Utilizadas
 
-* **Lenguaje:** Python 3.x
+* **Lenguaje:** Python 3
 * **Interfaz Gráfica:** Tkinter
 * **Persistencia:** SQLite3
 * **Web Scraping:** BeautifulSoup & Requests
