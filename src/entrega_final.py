@@ -9,6 +9,7 @@ from tkinter import messagebox
 import requests
 from bs4 import BeautifulSoup
 import re
+import os
 
 #-------------------------------------------------FUNCIONES------------------------------------------------------
 #-----------------------------------------BEAUTIFUL SOUP & REQUESTS----------------------------------------------
@@ -43,7 +44,14 @@ def clima_caba(): #Función para obtener el clima de CABA en tiempo real
 
 #-------------------------------------------------FUNCIONES SQL-------------------------------------------------
 def crear_base_datos():
-    con = sqlite3.connect("base_datos.db") #Crea una conexión a la base de datos, si la base de datos no existe, se crea automáticamente
+    # Buscamos la carpeta exacta donde está guardado este archivo .py
+    carpeta_del_script = os.path.dirname(os.path.abspath(__file__))
+    
+    # Creamos la ruta completa uniendo la carpeta con el nombre del archivo .db
+    ruta_db = os.path.join(carpeta_del_script, "base_datos.db")
+    
+    # Ahora siempre se conectará/creará en el lugar correcto (dentro de src/)
+    con = sqlite3.connect(ruta_db)
     return con
 
 def crear_tabla(con): 
