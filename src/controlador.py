@@ -2,7 +2,7 @@ from tkinter import messagebox
 import re
 import requests
 from bs4 import BeautifulSoup
-from modelo import alta_de_registro, baja_de_registro, actualizar
+from modelo import alta_de_registro, baja_de_registro, actualizar, consultar_todos
 
 
 #-----------------------------------------BEAUTIFUL SOUP & REQUESTS----------------------------------------------
@@ -36,18 +36,12 @@ def clima_caba(): #Función para obtener el clima de CABA en tiempo real
 #---------------------------------------------------------------------------------------------------------------
 #---------------------------FUNCIONES CONTROL DE DATOS--------------------------
 #-GESTION DE DATOS
-def actualizar_tree():
-    global con
-    global tree
+def actualizar_tree(tree):
     tabla_tree = tree.get_children() #Obtiene una lista de los identificadores de los elementos que se encuentran en el nivel superior del árbol.
     for  fila in tabla_tree: #Recorre cada fila del Treeview.
         tree.delete(fila) #Elimina la fila del Treeview.
-    
-    cursor = con.cursor() #Crea un cursor para ejecutar comandos SQL en la base de datos
-    sql = "SELECT * FROM empresa ORDER BY id DESC;" #Define la consulta SQL para seleccionar todos los registros ordenados por id en orden ascendente
-    
-    tabla = cursor.execute(sql) #Ejecuta la conuslta.
-    tabla2 = tabla.fetchall() #Devuelve una lista con todas las filas resultantes de la consulta.
+
+    tabla2 = consultar_todos()
 
     for fila in tabla2: #Inserta los datos en el Treewiev.
         tree.insert("", "end", text=str(fila[0]), values=(fila[1], fila[2], fila[3]))
@@ -70,15 +64,15 @@ def busqueda(tree, tree_consulta, var_busqueda):
             # Insertamos en el árbol de consulta lo encontrado
             tree_consulta.insert("", "end", text=id_fila, values=valores) 
 
-def funcion_guardar(con, var_categoria, var_descripcion, var_impacto): 
+def funcion_guardar(var_categoria, var_descripcion, var_impacto): 
     filtro = re.compile(r'\D') #Crea un patrón de expresión regular que se usará para buscar caracteres no numéricos en el texto.
     descripcion = str(var_descripcion.get()) #Obtiene el texto, se asegura que el valor sea una cadena y lo guarda en la variable local.
     if var_categoria.get() != "" and var_descripcion.get() != "" and var_impacto.get() != "": #Validación inicial de los campos.
         if (re.match(filtro, descripcion) == None): #Validación con la expresión regular.
             messagebox.showerror("Error", "Ingrese una descripción válida. No se permite iniciar con un caracter numérico.") #Mensaje de error si la descripcion inicia con un caracter numérico.
         else: #Guardar en el registro y actualizar el Treeview.
-            alta_de_registro(con, var_categoria.get(), var_descripcion.get(), var_impacto.get())
-            actualizar_tree(con)
+            alta_de_registro(var_categoria.get(), var_descripcion.get(), var_impacto.get())
+            actualizar_tree()
             var_descripcion.set("")
 
     elif var_categoria.get().strip() == "" and var_descripcion.get().strip() == "": #Validación si los campos categoria y descripcion no estan vacios.
@@ -93,9 +87,8 @@ def funcion_guardar(con, var_categoria, var_descripcion, var_impacto):
         messagebox.showerror("Error", "Debe ingresar una descripción.") #Mensaje de error si el campo descripción esta vacio.
         return
 
-def funcion_borrar(con, tree):
+def funcion_borrar(tree):
 
-    cursor = con.cursor() #Crear cursos de base de datos.
     item_seleccionado = tree.selection() #Obtener items seleccionados del Treeview
     if not item_seleccionado:
         messagebox.showerror("Error", "Debe seleccionar un registro para borrar.") #Mensaje de error si el item no esta seleccionado al intentar borrar.
@@ -104,9 +97,9 @@ def funcion_borrar(con, tree):
         for i in item_seleccionado: #Reccorrer cada item seleccionado.
             mi_id = tree.item(i).get("text") #Obtener el id asociado al item.
             tree.delete(i) #Elimina la fila del Treeview.
-            baja_de_registro(con, mi_id) #Elimina el registro d ela base de datos.
+            baja_de_registro(mi_id) #Elimina el registro d ela base de datos.
 
-def funcion_modificar_variables(con, tree, var_descripcion, var_impacto, var_categoria):
+def funcion_modificar_variables(tree, var_descripcion, var_impacto, var_categoria):
     filtro = re.compile(r'\D') #Crea un patrón de expresión regular que se usará para buscar caracteres no numéricos en el texto.
     descripcion = str(var_descripcion.get()) #Obtiene el texto, se asegura que el valor sea una cadena y lo guarda en la variable local.
     item_seleccionado = tree.focus() #Obtiene el ítem enfocado en el Treeview.
@@ -125,7 +118,7 @@ def funcion_modificar_variables(con, tree, var_descripcion, var_impacto, var_cat
         if re.match(filtro, descripcion): #Validación con la expresión regular.
             tree.item(item_seleccionado, values=(var_categoria.get(), var_descripcion.get(), var_impacto.get())) #Validación inicial de los campos.
             mi_id = tree.item(item_seleccionado).get("text") #Obtener el id del registro.
-            actualizar(con, mi_id, var_categoria.get(), var_descripcion.get(), var_impacto.get()) #Actualiza el registro en la base de datos.
+            actualizar(mi_id, var_categoria.get(), var_descripcion.get(), var_impacto.get()) #Actualiza el registro en la base de datos.
         else:
             messagebox.showerror("Error", "No se permite iniciar la descripción con caracteres numéricos.") #Mensaje de error si la descripcion inicia con un caracter numérico.
             return
@@ -146,7 +139,7 @@ def ver_instrucciones():
                       "Para impactos negativos: -1\n"
                       "Para impactos positivos: 1\n"
                       "Para impactos neutros: 0\n"
-            "Solo puede ingresar valores dentro de ese rango\n"
+            "Solo puede ingresar valores dentro de ese rango.\n"
             "\n"
         "2. Use el boton 'Guardar' para agregar la entrada a la base de datos.\n"
         "\n"
@@ -195,12 +188,10 @@ def copiar_fila(tree, root): #Permite copiar la/las filas seleccionadas
     root.clipboard_clear() #Limpia el portapapeles del sistema operativo.
     root.clipboard_append(texto) #Copia el texto generado al portapapeles.
 
-def al_cerrar(con, root):
+def al_cerrar(root):
     # 1. Acción personalizada (ej: preguntar si está seguro)
     if messagebox.askokcancel("Salir", "¿Deseas cerrar el programa?"):  #askokcancel muestra un cuadro de diálogo con opciones "OK" y "Cancelar". 
-                                                                        #Devuelve True si el usuario hace clic en "OK" y False si hace clic en "Cancelar".
-        # 2. Cerrar recursos (Base de datos)
-        con.close() 
+                                                                        #Devuelve True si el usuario hace clic en "OK" y False si hace clic en "Cancelar". 
         print("Conexión cerrada. Saliendo...")
         # 3. Destruir la ventana manualmente
         root.destroy()

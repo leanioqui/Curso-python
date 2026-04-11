@@ -79,7 +79,7 @@ def funcion_volver_menu_principal(frame_modificacion, frame_consulta, frame_ab, 
 
 
 #--------------------------------INTERFAZ Y NAVEGACIÓN---------------------------
-def menu_principal(frame_ab, frame_consulta, frame_modificacion, tree, tree_consulta, root, var_categoria, var_descripcion, var_impacto, con):
+def menu_principal(frame_ab, frame_consulta, frame_modificacion, tree, tree_consulta, root, var_categoria, var_descripcion, var_impacto):
     
     global barra_titulo
 
@@ -110,9 +110,9 @@ def menu_principal(frame_ab, frame_consulta, frame_modificacion, tree, tree_cons
     entry_valor.grid(row=1, column=5, sticky = W)
 
     #Creamos y colocamos los cuatro botones del CRUD y dos botones mas para calcular el total y el promedio
-    boton_g = Button(frame_ab, text="Guardar", command = lambda: funcion_guardar(con)) 
+    boton_g = Button(frame_ab, text="Guardar", command = lambda: funcion_guardar()) 
     boton_g.grid(row=1, column=7, sticky="ew", padx=2)
-    boton_d = Button(frame_ab, text="Borrar", command = lambda: funcion_borrar(con))
+    boton_d = Button(frame_ab, text="Borrar", command = lambda: funcion_borrar())
     boton_d.grid(row=2, column=7, sticky="ew", padx=2)
     boton_m = Button(frame_ab, text="Modificar", command = lambda: funcion_modificar())
     boton_m.grid(row=1, column=8, sticky="ew", padx=2)
@@ -292,6 +292,6 @@ def iniciar_app():
         frame_ab.rowconfigure(i, weight=1)
 
 
-    actualizar_tree(con, tree)
+    actualizar_tree(tree)
     menu_principal(frame_ab, frame_consulta, frame_modificacion, tree, tree_consulta, root, var_categoria, var_descripcion, var_impacto)
     root.mainloop()
