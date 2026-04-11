@@ -14,6 +14,12 @@ def crear_base_datos():
     con = sqlite3.connect(ruta_db)
     return con
 
+#---------------------------------INICIO BASE DE DATOS-------------------------------
+try:
+    con = crear_base_datos()
+except Exception as e:
+    print("Error al crear la base de datos:", e)
+
 def crear_tabla(con): 
     cursor = con.cursor() #Crea un cursor para ejecutar comandos SQL en la base de datos
     sql = "CREATE TABLE IF NOT EXISTS empresa (id INTEGER PRIMARY KEY AUTOINCREMENT, categoria TEXT, descripcion TEXT, impacto INTEGER)" #Define la consulta SQL para crear una tabla llamada "empresa" con cuatro columnas: id, categoría, descripción e impacto  
@@ -21,7 +27,7 @@ def crear_tabla(con):
     con.commit() #Guarda los cambios realizados en la base de datos
 
 try:
-    crear_tabla()
+    crear_tabla(con)
 except Exception as e:
     print("Error al crear la tabla:", e)
 
@@ -53,6 +59,3 @@ def seleccionar(con, mi_id): #Selecciona un elemento de la base de datos
     cursor.execute(sql, data)
     con.commit()
 
-#---------------------------------INICIO BASE DE DATOS-------------------------------
-con = crear_base_datos()
-crear_tabla(con)
