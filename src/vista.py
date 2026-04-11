@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
-from controlador import funcion_guardar, funcion_borrar, funcion_consultar, funcion_modificar, funcion_total, funcion_promedio, copiar_fila, al_cerrar, actualizar_tree, funcion_modificar_variables, funcion_volver_menu_principal, ver_instrucciones, busqueda, clima_caba
+from controlador import funcion_guardar, funcion_borrar, funcion_total, funcion_promedio, copiar_fila, al_cerrar, actualizar_tree, funcion_modificar_variables, ver_instrucciones, busqueda, clima_caba
 
 
 #--------------------------------ESTILO-----------------------------------------
@@ -38,6 +38,44 @@ def modo_oscuro(root): #Funcion que define los colores del Modo Oscuro
     root.config(bg=bg)
     aplicar_estilo_recursivo(root, bg, fg)
     barra_titulo.config(background="#1f6857", foreground=fg)
+#-----------------------------------------------------------------------------------------------------------
+
+
+def funcion_modificar (frame_ab, frame_modificacion): 
+    #Escondemos el frame de altas y bajas
+    frame_ab.grid_forget()
+
+    #Colocamos el frame de modificaciones
+    frame_modificacion.grid(row=1, column=0)
+
+    configurar_menu_modificar()
+
+def funcion_consultar(frame_ab, frame_consulta):
+    #Escondemos el frame de altas y bajas
+    frame_ab.grid_forget()
+
+    #Colocamos el frame de consultas
+    frame_consulta.grid(row=1, column=0)
+
+    configurar_menu_consulta()
+
+def funcion_volver_menu_principal(frame_modificacion, frame_consulta, frame_ab, tree_consulta, tree):
+    #Escondemos los frames de modificaciones y consultas 
+    frame_modificacion.grid_forget()
+    frame_consulta.grid_forget()
+
+    #Escondemos el árbol de consultas
+    tree_consulta.grid_forget()
+
+    #Colocamos el frame de altas y bajas
+    frame_ab.grid(row=1, column=0, sticky="nsew") 
+    
+    #Colocamos el árbol original
+    tree.grid(row=6, column=0, columnspan=4, sticky="nsew")
+
+    #Recorremos los elementos del árbol del 'menu consulta' y los eliminamos con el fin de dejarlo vacío
+    for i in tree_consulta.get_children():
+        tree_consulta.delete(i)
 
 
 #--------------------------------INTERFAZ Y NAVEGACIÓN---------------------------
@@ -254,6 +292,6 @@ def iniciar_app():
         frame_ab.rowconfigure(i, weight=1)
 
 
-    actualizar_tree()
+    actualizar_tree(con, tree)
     menu_principal(frame_ab, frame_consulta, frame_modificacion, tree, tree_consulta, root, var_categoria, var_descripcion, var_impacto)
     root.mainloop()

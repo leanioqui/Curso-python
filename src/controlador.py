@@ -3,7 +3,6 @@ import re
 import requests
 from bs4 import BeautifulSoup
 from modelo import alta_de_registro, baja_de_registro, actualizar
-from vista import configurar_menu_modificar, configurar_menu_consulta
 
 
 #-----------------------------------------BEAUTIFUL SOUP & REQUESTS----------------------------------------------
@@ -37,7 +36,9 @@ def clima_caba(): #Función para obtener el clima de CABA en tiempo real
 #---------------------------------------------------------------------------------------------------------------
 #---------------------------FUNCIONES CONTROL DE DATOS--------------------------
 #-GESTION DE DATOS
-def actualizar_tree(con, tree):
+def actualizar_tree():
+    global con
+    global tree
     tabla_tree = tree.get_children() #Obtiene una lista de los identificadores de los elementos que se encuentran en el nivel superior del árbol.
     for  fila in tabla_tree: #Recorre cada fila del Treeview.
         tree.delete(fila) #Elimina la fila del Treeview.
@@ -203,39 +204,3 @@ def al_cerrar(con, root):
         print("Conexión cerrada. Saliendo...")
         # 3. Destruir la ventana manualmente
         root.destroy()
-
-def funcion_modificar (frame_ab, frame_modificacion): 
-    #Escondemos el frame de altas y bajas
-    frame_ab.grid_forget()
-
-    #Colocamos el frame de modificaciones
-    frame_modificacion.grid(row=1, column=0)
-
-    configurar_menu_modificar()
-
-def funcion_consultar(frame_ab, frame_consulta):
-    #Escondemos el frame de altas y bajas
-    frame_ab.grid_forget()
-
-    #Colocamos el frame de consultas
-    frame_consulta.grid(row=1, column=0)
-
-    configurar_menu_consulta()
-
-def funcion_volver_menu_principal(frame_modificacion, frame_consulta, frame_ab, tree_consulta, tree):
-    #Escondemos los frames de modificaciones y consultas 
-    frame_modificacion.grid_forget()
-    frame_consulta.grid_forget()
-
-    #Escondemos el árbol de consultas
-    tree_consulta.grid_forget()
-
-    #Colocamos el frame de altas y bajas
-    frame_ab.grid(row=1, column=0, sticky="nsew") 
-    
-    #Colocamos el árbol original
-    tree.grid(row=6, column=0, columnspan=4, sticky="nsew")
-
-    #Recorremos los elementos del árbol del 'menu consulta' y los eliminamos con el fin de dejarlo vacío
-    for i in tree_consulta.get_children():
-        tree_consulta.delete(i)
