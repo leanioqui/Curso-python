@@ -1,10 +1,47 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
-from controlador import funcion_guardar, funcion_borrar, funcion_consultar, funcion_modificar, funcion_total, funcion_promedio, copiar_fila, al_cerrar, actualizar_tree, funcion_modificar_variables, funcion_volver_menu_principal, ver_instrucciones, modo_claro, modo_oscuro
+from controlador import funcion_guardar, funcion_borrar, funcion_consultar, funcion_modificar, funcion_total, funcion_promedio, copiar_fila, al_cerrar, actualizar_tree, funcion_modificar_variables, funcion_volver_menu_principal, ver_instrucciones, busqueda, clima_caba
+
+
+#--------------------------------ESTILO-----------------------------------------
+def aplicar_estilo_recursivo(root, color_botones, color_letra): #Esta funcion aplica colores de fondo y texto a todos los widgets de la interfaz de manera recursiva
+    for w in root.winfo_children(): #winfo_children() devuelve una lista de todos los widgets hijos directos del widget root, 
+                                    # es decir, los widgets que están contenidos dentro de root.
+        try: w.configure(bg=color_botones, fg=color_letra) # Intenta pintar fondo y letra
+        except: 
+            try: w.configure(bg=color_botones)    # Si no tiene letra (como Frames), solo fondo
+            except: pass
+        aplicar_estilo_recursivo(w, color_botones, color_letra) # Sigue con los hijos
+
+def modo_claro(root): #Funcion que define los colores del Modo Claro
+    style = ttk.Style()
+    style.theme_use('vista')
+    root.config(bg="SystemButtonFace") #SystemButtonFace es el color de fondo predeterminado de los botones en Windows, 
+                                        #al usarlo como fondo para la ventana principal, se logra un aspecto más claro y consistente con el tema clásico de Windows.
+    aplicar_estilo_recursivo(root, "SystemButtonFace", "black") #Pinta fondo y letra de todos los widgets, 
+                                                                #el fondo se pinta con el color predeterminado del sistema para botones (SystemButtonFace) 
+                                                                # y la letra se pinta de negro
+    barra_titulo.config(background="#46dab7", foreground="black")
+
+def modo_oscuro(root): #Funcion que define los colores del Modo Oscuro
+    style = ttk.Style()
+    style.theme_use("clam")
+    bg, fg = "#121212", "#ffffff" # Variables cortas
+    
+    # Configuración de los componentes TTK (Treeview/Combobox)
+    style.configure("Treeview", background="#1e1e1e", foreground=fg, fieldbackground="#1e1e1e", borderwidth=0)
+    style.configure("Treeview.Heading", background="#333333", foreground=fg, relief="flat")
+    style.map("Treeview", background=[('selected', '#007acc')])
+    style.configure("TCombobox", fieldbackground="#1e1e1e", background="#333333", foreground=fg)
+
+    root.config(bg=bg)
+    aplicar_estilo_recursivo(root, bg, fg)
+    barra_titulo.config(background="#1f6857", foreground=fg)
+
 
 #--------------------------------INTERFAZ Y NAVEGACIÓN---------------------------
-def menu_principal(frame_ab, frame_consulta, frame_modificacion, tree, tree_consulta, root, var_categoria, var_descripcion, var_impacto):
+def menu_principal(frame_ab, frame_consulta, frame_modificacion, tree, tree_consulta, root, var_categoria, var_descripcion, var_impacto, con):
     
     global barra_titulo
 
@@ -78,7 +115,7 @@ def menu_principal(frame_ab, frame_consulta, frame_modificacion, tree, tree_cons
     menu_ajustes.add_separator() #Añadimos un separador por si en un futuro deseamos colocar mas botones
     menu_desplegable.add_cascade(label="⚙", menu=menu_ajustes) #Hacemos que se añada esta cascada al menu 'menu desplegable'
 
-def configurar_menu_modificar(frame_modificacion, var_categoria, var_descripcion, var_impacto):
+def configurar_menu_modificar(frame_modificacion, var_categoria, var_descripcion, var_impacto, con):
    
     #Creamos las etiquetas para la categoría, descripción e impacto y los colocamos dentro de nuestro frame de modificaciones.
     etiqueta_categoria = Label(frame_modificacion, text="Categoría") 
@@ -105,10 +142,10 @@ def configurar_menu_modificar(frame_modificacion, var_categoria, var_descripcion
     #Creamos y colocamos los botones 'Actualizar' y 'Volver' 
     boton_refresh = Button(frame_modificacion, text="Actualizar", width=15, command = lambda: funcion_modificar_variables(con))
     boton_refresh.grid(row=0, column=6, sticky=E)
-    boton_save = Button(frame_modificacion, text="Volver", width=15, command = lambda: funcion_volver_menu_principal())
+    boton_save = Button(frame_modificacion, text="Volver", width=15, command = lambda: funcion_volver_menu_principal)
     boton_save.grid(row=1, column=6, sticky=E)
 
-def configurar_menu_consulta():
+def configurar_menu_consulta(tree, tree_consulta, frame_consulta, var_busqueda):
     #Escondemos el árbol orginal
     tree.grid_forget()
 

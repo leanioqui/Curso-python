@@ -1,7 +1,6 @@
 import os
 import sqlite3
 
-
 #-------------------------------------------------FUNCIONES SQL-------------------------------------------------
 def crear_base_datos():
     # Buscamos la carpeta exacta donde está guardado este archivo .py
