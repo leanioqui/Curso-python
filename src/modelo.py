@@ -20,6 +20,11 @@ def crear_tabla(con):
     cursor.execute(sql) #Ejecuta la consulta SQL para crear la tabla en la base de datos
     con.commit() #Guarda los cambios realizados en la base de datos
 
+try:
+    crear_tabla()
+except Exception as e:
+    print("Error al crear la tabla:", e)
+
 def alta_de_registro(con, categoria, desc, impacto): 
     cursor = con.cursor()
     sql = "INSERT INTO empresa (categoria, descripcion, impacto) VALUES (?, ?, ?);" #Define la consulta SQL para insertar un registro en la tabla "empresa"
@@ -47,3 +52,7 @@ def seleccionar(con, mi_id): #Selecciona un elemento de la base de datos
     data = (mi_id,)
     cursor.execute(sql, data)
     con.commit()
+
+#---------------------------------INICIO BASE DE DATOS-------------------------------
+con = crear_base_datos()
+crear_tabla(con)
