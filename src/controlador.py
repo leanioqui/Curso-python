@@ -1,7 +1,38 @@
-
 import re
+from tkinter import *
+from tkinter import ttk
 from modelo import alta_de_registro, baja_de_registro, actualizar
-from vista import configurar_menu_modificar, configurar_menu_consulta
+from vista import configurar_menu_modificar, configurar_menu_consulta, barra_titulo
+
+#-----------------------------------------BEAUTIFUL SOUP & REQUESTS----------------------------------------------
+def clima_caba(): #Función para obtener el clima de CABA en tiempo real
+
+    url = "https://www.timeanddate.com/weather/@3433955" # URL del sitio de clima para Buenos Aires
+    encabezados = {'User-Agent': 'Mozilla/5.0'} # Agente de usuario y cabecera para simular una solicitud desde un navegador web, 
+                                            #lo que puede ayudar a evitar bloqueos por parte del sitio web
+
+    try:
+        response = requests.get(url, headers=encabezados, timeout=10) # Realiza la solicitud HTTP con un tiempo de espera de 10 segundos, pasado el tiempo de espera, se lanzará una excepción si no se recibe una respuesta del servidor
+        
+        if response.status_code == 200: # Verifica que la solicitud fue exitosa, el código de estado 200 indica que la página se cargó correctamente
+            soup = BeautifulSoup(response.text, "html.parser") # Analiza el contenido HTML de la página 
+            
+            # En este sitio, la temperatura actual suele estar en un div con clase 'h2'
+            # dentro de la sección de 'bk-focus'
+            temp_div = soup.find('div', class_='h2') # Busca el div que contiene la temperatura actual
+            # temp_div = <div class="h2">24 °C</div>
+            
+            if temp_div:
+                # .strip() limpia espacios en blanco y saltos de línea extra y .text extrae solo el texto dentro del div, que es la temperatura actual
+                return temp_div.text.strip() # Retorna la temperatura actual en CABA
+            else:
+                print("No se encontró el div de temperatura. Revisá el inspector.") # Si no se encuentra el div, se sugiere revisar el inspector del navegador para verificar la estructura HTML actual del sitio
+        else:
+            print(f"Error de conexión: {response.status_code}") # Si la solicitud no fue exitosa, se muestra el código de estado HTTP
+
+    except Exception as e: # Captura cualquier excepción que ocurra durante la solicitud o el análisis
+        print(f"Error de raíz: {e}") # Imprime el mensaje de error en caso de que ocurra una excepción, como problemas de conexión o cambios en la estructura del sitio web
+#---------------------------------------------------------------------------------------------------------------
 
 
 #--------------------------------ESTILO-----------------------------------------

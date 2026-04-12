@@ -1,10 +1,10 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
-from controlador import funcion_guardar, funcion_borrar, funcion_consultar, funcion_modificar, funcion_total, funcion_promedio, copiar_fila, al_cerrar, actualizar_tree, funcion_modificar_variables, funcion_volver_menu_principal, ver_instrucciones, modo_claro, modo_oscuro
-
+from controlador import clima_caba, funcion_guardar, funcion_borrar, funcion_consultar, funcion_modificar, funcion_total, funcion_promedio, copiar_fila, al_cerrar, actualizar_tree, funcion_modificar_variables, funcion_volver_menu_principal, ver_instrucciones, modo_claro, modo_oscuro
+from modelo import con
 #--------------------------------INTERFAZ Y NAVEGACIÓN---------------------------
-def menu_principal(frame_ab, frame_consulta, frame_modificacion, tree, tree_consulta, root, var_categoria, var_descripcion, var_impacto):
+def menu_principal(frame_ab, frame_consulta, frame_modificacion, tree, tree_consulta, root, var_categoria, var_descripcion, var_impacto, con):
     
     global barra_titulo
 
@@ -108,7 +108,7 @@ def configurar_menu_modificar(frame_modificacion, var_categoria, var_descripcion
     boton_save = Button(frame_modificacion, text="Volver", width=15, command = lambda: funcion_volver_menu_principal())
     boton_save.grid(row=1, column=6, sticky=E)
 
-def configurar_menu_consulta():
+def configurar_menu_consulta(tree, tree_consulta, frame_consulta, var_busqueda, busqueda):
     #Escondemos el árbol orginal
     tree.grid_forget()
 
@@ -218,5 +218,5 @@ def iniciar_app():
 
 
     actualizar_tree()
-    menu_principal(frame_ab, frame_consulta, frame_modificacion, tree, tree_consulta, root, var_categoria, var_descripcion, var_impacto)
+    menu_principal(frame_ab, frame_consulta, frame_modificacion, tree, tree_consulta, root, var_categoria, var_descripcion, var_impacto, con)
     root.mainloop()
