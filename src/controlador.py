@@ -1,8 +1,19 @@
+# 1. Librerías estándar de Python
 import re
+
+# 2. Interfaz Gráfica (Tkinter)
 from tkinter import *
-from tkinter import ttk
-from modelo import alta_de_registro, baja_de_registro, actualizar
+from tkinter import ttk, messagebox
+
+# 3. Librerías de terceros (Instaladas vía pip)
+import requests
+from bs4 import BeautifulSoup
+
+# 4. Módulos locales (Tu propio código)
+from modelo import alta_de_registro, baja_de_registro, actualizar, consultar_todos
 from vista import configurar_menu_modificar, configurar_menu_consulta, barra_titulo
+
+
 
 #-----------------------------------------BEAUTIFUL SOUP & REQUESTS----------------------------------------------
 def clima_caba(): #Función para obtener el clima de CABA en tiempo real
@@ -33,60 +44,19 @@ def clima_caba(): #Función para obtener el clima de CABA en tiempo real
     except Exception as e: # Captura cualquier excepción que ocurra durante la solicitud o el análisis
         print(f"Error de raíz: {e}") # Imprime el mensaje de error en caso de que ocurra una excepción, como problemas de conexión o cambios en la estructura del sitio web
 #---------------------------------------------------------------------------------------------------------------
-
-
-#--------------------------------ESTILO-----------------------------------------
-def aplicar_estilo_recursivo(root, color_botones, color_letra): #Esta funcion aplica colores de fondo y texto a todos los widgets de la interfaz de manera recursiva
-    for w in root.winfo_children(): #winfo_children() devuelve una lista de todos los widgets hijos directos del widget root, 
-                                    # es decir, los widgets que están contenidos dentro de root.
-        try: w.configure(bg=color_botones, fg=color_letra) # Intenta pintar fondo y letra
-        except: 
-            try: w.configure(bg=color_botones)    # Si no tiene letra (como Frames), solo fondo
-            except: pass
-        aplicar_estilo_recursivo(w, color_botones, color_letra) # Sigue con los hijos
-
-def modo_claro(): #Funcion que define los colores del Modo Claro
-    style = ttk.Style()
-    style.theme_use('vista')
-    root.config(bg="SystemButtonFace") #SystemButtonFace es el color de fondo predeterminado de los botones en Windows, 
-                                        #al usarlo como fondo para la ventana principal, se logra un aspecto más claro y consistente con el tema clásico de Windows.
-    aplicar_estilo_recursivo(root, "SystemButtonFace", "black") #Pinta fondo y letra de todos los widgets, 
-                                                                #el fondo se pinta con el color predeterminado del sistema para botones (SystemButtonFace) 
-                                                                # y la letra se pinta de negro
-    barra_titulo.config(background="#46dab7", foreground="black")
-
-def modo_oscuro(): #Funcion que define los colores del Modo Oscuro
-    style = ttk.Style()
-    style.theme_use("clam")
-    bg, fg = "#121212", "#ffffff" # Variables cortas
-    
-    # Configuración de los componentes TTK (Treeview/Combobox)
-    style.configure("Treeview", background="#1e1e1e", foreground=fg, fieldbackground="#1e1e1e", borderwidth=0)
-    style.configure("Treeview.Heading", background="#333333", foreground=fg, relief="flat")
-    style.map("Treeview", background=[('selected', '#007acc')])
-    style.configure("TCombobox", fieldbackground="#1e1e1e", background="#333333", foreground=fg)
-
-    root.config(bg=bg)
-    aplicar_estilo_recursivo(root, bg, fg)
-    barra_titulo.config(background="#1f6857", foreground=fg)
-
 #---------------------------FUNCIONES CONTROL DE DATOS--------------------------
 #-GESTION DE DATOS
-def actualizar_tree(con, tree):
+def actualizar_tree(tree):
     tabla_tree = tree.get_children() #Obtiene una lista de los identificadores de los elementos que se encuentran en el nivel superior del árbol.
     for  fila in tabla_tree: #Recorre cada fila del Treeview.
         tree.delete(fila) #Elimina la fila del Treeview.
-    
-    cursor = con.cursor() #Crea un cursor para ejecutar comandos SQL en la base de datos
-    sql = "SELECT * FROM empresa ORDER BY id DESC;" #Define la consulta SQL para seleccionar todos los registros ordenados por id en orden ascendente
-    
-    tabla = cursor.execute(sql) #Ejecuta la conuslta.
-    tabla2 = tabla.fetchall() #Devuelve una lista con todas las filas resultantes de la consulta.
+
+    tabla2 = consultar_todos()
 
     for fila in tabla2: #Inserta los datos en el Treewiev.
         tree.insert("", "end", text=str(fila[0]), values=(fila[1], fila[2], fila[3]))
 
-def busqueda(tree, tree_consulta):
+def busqueda(tree, tree_consulta, var_busqueda):
     # 1. Limpiamos el árbol de resultados
     for i in tree_consulta.get_children():
         tree_consulta.delete(i)
@@ -104,15 +74,15 @@ def busqueda(tree, tree_consulta):
             # Insertamos en el árbol de consulta lo encontrado
             tree_consulta.insert("", "end", text=id_fila, values=valores) 
 
-def funcion_guardar(con): 
+def funcion_guardar(var_categoria, var_descripcion, var_impacto): 
     filtro = re.compile(r'\D') #Crea un patrón de expresión regular que se usará para buscar caracteres no numéricos en el texto.
     descripcion = str(var_descripcion.get()) #Obtiene el texto, se asegura que el valor sea una cadena y lo guarda en la variable local.
     if var_categoria.get() != "" and var_descripcion.get() != "" and var_impacto.get() != "": #Validación inicial de los campos.
         if (re.match(filtro, descripcion) == None): #Validación con la expresión regular.
             messagebox.showerror("Error", "Ingrese una descripción válida. No se permite iniciar con un caracter numérico.") #Mensaje de error si la descripcion inicia con un caracter numérico.
         else: #Guardar en el registro y actualizar el Treeview.
-            alta_de_registro(con, var_categoria.get(), var_descripcion.get(), var_impacto.get())
-            actualizar_tree(con)
+            alta_de_registro(var_categoria.get(), var_descripcion.get(), var_impacto.get())
+            actualizar_tree()
             var_descripcion.set("")
 
     elif var_categoria.get().strip() == "" and var_descripcion.get().strip() == "": #Validación si los campos categoria y descripcion no estan vacios.
@@ -127,9 +97,8 @@ def funcion_guardar(con):
         messagebox.showerror("Error", "Debe ingresar una descripción.") #Mensaje de error si el campo descripción esta vacio.
         return
 
-def funcion_borrar(con, tree):
+def funcion_borrar(tree):
 
-    cursor = con.cursor() #Crear cursos de base de datos.
     item_seleccionado = tree.selection() #Obtener items seleccionados del Treeview
     if not item_seleccionado:
         messagebox.showerror("Error", "Debe seleccionar un registro para borrar.") #Mensaje de error si el item no esta seleccionado al intentar borrar.
@@ -138,9 +107,9 @@ def funcion_borrar(con, tree):
         for i in item_seleccionado: #Reccorrer cada item seleccionado.
             mi_id = tree.item(i).get("text") #Obtener el id asociado al item.
             tree.delete(i) #Elimina la fila del Treeview.
-            baja_de_registro(con, mi_id) #Elimina el registro d ela base de datos.
+            baja_de_registro(mi_id) #Elimina el registro d ela base de datos.
 
-def funcion_modificar_variables(con, tree):
+def funcion_modificar_variables(tree, var_descripcion, var_impacto, var_categoria):
     filtro = re.compile(r'\D') #Crea un patrón de expresión regular que se usará para buscar caracteres no numéricos en el texto.
     descripcion = str(var_descripcion.get()) #Obtiene el texto, se asegura que el valor sea una cadena y lo guarda en la variable local.
     item_seleccionado = tree.focus() #Obtiene el ítem enfocado en el Treeview.
@@ -159,7 +128,7 @@ def funcion_modificar_variables(con, tree):
         if re.match(filtro, descripcion): #Validación con la expresión regular.
             tree.item(item_seleccionado, values=(var_categoria.get(), var_descripcion.get(), var_impacto.get())) #Validación inicial de los campos.
             mi_id = tree.item(item_seleccionado).get("text") #Obtener el id del registro.
-            actualizar(con, mi_id, var_categoria.get(), var_descripcion.get(), var_impacto.get()) #Actualiza el registro en la base de datos.
+            actualizar(mi_id, var_categoria.get(), var_descripcion.get(), var_impacto.get()) #Actualiza el registro en la base de datos.
         else:
             messagebox.showerror("Error", "No se permite iniciar la descripción con caracteres numéricos.") #Mensaje de error si la descripcion inicia con un caracter numérico.
             return
@@ -180,7 +149,7 @@ def ver_instrucciones():
                       "Para impactos negativos: -1\n"
                       "Para impactos positivos: 1\n"
                       "Para impactos neutros: 0\n"
-            "Solo puede ingresar valores dentro de ese rango\n"
+            "Solo puede ingresar valores dentro de ese rango.\n"
             "\n"
         "2. Use el boton 'Guardar' para agregar la entrada a la base de datos.\n"
         "\n"
@@ -229,48 +198,10 @@ def copiar_fila(tree, root): #Permite copiar la/las filas seleccionadas
     root.clipboard_clear() #Limpia el portapapeles del sistema operativo.
     root.clipboard_append(texto) #Copia el texto generado al portapapeles.
 
-def al_cerrar(con, root):
+def al_cerrar(root):
     # 1. Acción personalizada (ej: preguntar si está seguro)
     if messagebox.askokcancel("Salir", "¿Deseas cerrar el programa?"):  #askokcancel muestra un cuadro de diálogo con opciones "OK" y "Cancelar". 
-                                                                        #Devuelve True si el usuario hace clic en "OK" y False si hace clic en "Cancelar".
-        # 2. Cerrar recursos (Base de datos)
-        con.close() 
+                                                                        #Devuelve True si el usuario hace clic en "OK" y False si hace clic en "Cancelar". 
         print("Conexión cerrada. Saliendo...")
         # 3. Destruir la ventana manualmente
         root.destroy()
-
-def funcion_modificar (frame_ab, frame_modificacion): 
-    #Escondemos el frame de altas y bajas
-    frame_ab.grid_forget()
-
-    #Colocamos el frame de modificaciones
-    frame_modificacion.grid(row=1, column=0)
-
-    configurar_menu_modificar()
-
-def funcion_consultar():
-    #Escondemos el frame de altas y bajas
-    frame_ab.grid_forget()
-
-    #Colocamos el frame de consultas
-    frame_consulta.grid(row=1, column=0)
-
-    configurar_menu_consulta()
-
-def funcion_volver_menu_principal():
-    #Escondemos los frames de modificaciones y consultas 
-    frame_modificacion.grid_forget()
-    frame_consulta.grid_forget()
-
-    #Escondemos el árbol de consultas
-    tree_consulta.grid_forget()
-
-    #Colocamos el frame de altas y bajas
-    frame_ab.grid(row=1, column=0, sticky="nsew") 
-    
-    #Colocamos el árbol original
-    tree.grid(row=6, column=0, columnspan=4, sticky="nsew")
-
-    #Recorremos los elementos del árbol del 'menu consulta' y los eliminamos con el fin de dejarlo vacío
-    for i in tree_consulta.get_children():
-        tree_consulta.delete(i)
