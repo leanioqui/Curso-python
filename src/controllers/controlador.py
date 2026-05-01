@@ -10,8 +10,8 @@ import requests
 from bs4 import BeautifulSoup
 
 # 4. Módulos locales (Tu propio código)
-from modelo import alta_de_registro, baja_de_registro, actualizar, consultar_todos
-from vista import configurar_menu_modificar, configurar_menu_consulta, barra_titulo
+from models.modelo import alta_de_registro, baja_de_registro, actualizar, consultar_todos
+from views.vista import configurar_menu_modificar, configurar_menu_consulta, barra_titulo
 
 
 

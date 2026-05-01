@@ -1,5 +1,5 @@
 from tkinter import *
-from vista import *y
+from views.vista import *y
 
 #--------------------------------INTERFAZ Y NAVEGACIÓN---------------------------
 def menu_principal(frame_ab, frame_consulta, frame_modificacion, tree, tree_consulta, root, var_categoria, var_descripcion, var_impacto, con):

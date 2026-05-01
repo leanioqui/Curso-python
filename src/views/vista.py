@@ -1,10 +1,10 @@
 # 1. Librerías de Interfaz (Tkinter)
 from tkinter import *
 from tkinter import ttk, messagebox
-from interfaces import *
+from views.interfaces import *
 
 # 2. Módulos locales (Controlador y Modelo)
-from controlador import (
+from controllers.controlador import (
     clima_caba, funcion_guardar, funcion_borrar, funcion_consultar, 
     funcion_modificar, funcion_total, funcion_promedio, copiar_fila, 
     al_cerrar, actualizar_tree, funcion_modificar_variables, 
