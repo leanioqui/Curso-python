@@ -52,3 +52,6 @@ class Modelo:
         tabla2 = tabla.fetchall() #Devuelve una lista con todas las filas resultantes de la consulta.
         self.con.close()
         return tabla2
+    
+    def cerrar_base(self):
+        self.con.close()

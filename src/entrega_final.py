@@ -112,7 +112,7 @@ def modo_claro(): #Funcion que define los colores del Modo Claro
                                                                 # y la letra se pinta de negro
     barra_titulo.config(background="#46dab7", foreground="black")
 
-def modo_oscuro(): #Funcion que define los colores del Modo Oscuro
+def modo_oscuro(): #Funcion que define los colores del Modo Oscuro 
     style = ttk.Style()
     style.theme_use("clam")
     bg, fg = "#121212", "#ffffff" # Variables cortas
