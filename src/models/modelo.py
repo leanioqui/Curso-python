@@ -33,7 +33,7 @@ class Modelo:
     def baja_de_registro(self, mi_id): 
         cursor = self.con.cursor()
         sql = "DELETE FROM empresa WHERE id = ?;" #Define la consulta SQL para eliminar un registro de la tabla "empresa"
-        data = (mi_id) #Crea una tupla con la id del registro a eliminar
+        data = (mi_id,) #Crea una tupla con la id del registro a eliminar
         cursor.execute(sql, data)
         self.con.commit()
 
@@ -50,7 +50,6 @@ class Modelo:
         
         tabla = cursor.execute(sql) #Ejecuta la conuslta.
         tabla2 = tabla.fetchall() #Devuelve una lista con todas las filas resultantes de la consulta.
-        self.con.close()
         return tabla2
     
     def cerrar_base(self):
