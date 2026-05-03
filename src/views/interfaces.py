@@ -36,9 +36,9 @@ def menu_principal(vista):
     boton_g.grid(row=1, column=7, sticky="ew", padx=2)
     boton_d = Button(vista.frame_ab, text="Borrar", command = lambda: vista.controlador.funcion_borrar(vista.tree))
     boton_d.grid(row=2, column=7, sticky="ew", padx=2)
-    boton_m = Button(vista.frame_ab, text="Modificar", command = lambda: vista.correr_modificar)
+    boton_m = Button(vista.frame_ab, text="Modificar", command = vista.correr_modificar)
     boton_m.grid(row=1, column=8, sticky="ew", padx=2)
-    boton_c = Button(vista.frame_ab, text="Consultar", command = lambda: vista.correr_consultar)
+    boton_c = Button(vista.frame_ab, text="Consultar", command = vista.correr_consultar)
     boton_c.grid(row=2, column=8, sticky="ew", padx=2)
     boton_t = Button(vista.frame_ab, text="Total", command = lambda: vista.controlador.funcion_total(vista.tree))
     boton_t.grid(row=1, column=9, sticky="ew", padx=2)
@@ -74,9 +74,9 @@ def menu_principal(vista):
 
     #Creamos el submenu que irá dentro del menú 'menu ajustes', hacemos que al clickear en él se desplieguen el botón 'Oscuro' y el botón 'Claro'
     submenu_claro_oscuro = Menu(menu_desplegable, tearoff=0) 
-    submenu_claro_oscuro.add_command(label="Oscuro", command=lambda: vista.controlador.modo_oscuro(vista)) 
+    submenu_claro_oscuro.add_command(label="Oscuro", command=lambda: vista.modo_oscuro(vista)) 
     submenu_claro_oscuro.add_separator() #Añadimos un separador entre el botón 'Oscuro' y el botón 'Claro'
-    submenu_claro_oscuro.add_command(label="Claro", command=lambda: vista.controlador.modo_claro(vista)) 
+    submenu_claro_oscuro.add_command(label="Claro", command=lambda: vista.modo_claro(vista)) 
 
     #Creamos el menú 'menu ajustes', hacemos que al clickear en él se despliegue el botón 'Modo' y que eso nos dirija al 'submenu claro oscuro'
     menu_ajustes = Menu(menu_desplegable, tearoff=0) 
@@ -109,7 +109,7 @@ def configurar_menu_modificar(vista):
     entry_valor.grid(row=0, column=5, sticky = W)
 
     #Creamos y colocamos los botones 'Actualizar' y 'Volver' 
-    boton_refresh = Button(vista.frame_modificacion, text="Actualizar", width=15, command = lambda: vista.funcion_modificar_variables(vista.con))
+    boton_refresh = Button(vista.frame_modificacion, text="Actualizar", width=15, command = lambda: vista.controlador.funcion_modificar_variables(vista))
     boton_refresh.grid(row=0, column=6, sticky=E)
     boton_save = Button(vista.frame_modificacion, text="Volver", width=15, command = lambda: vista.funcion_volver_menu_principal())
     boton_save.grid(row=1, column=6, sticky=E)
@@ -130,7 +130,7 @@ def configurar_menu_consulta(vista):
     entry_id_search.grid(row=1, column=0, columnspan=2)
 
     #Creamos y colocamos los botones 'Buscar' y 'Volver' 
-    boton_busqueda = Button(vista.frame_consulta, text="Buscar", width=25, command = vista.funcion_busqueda)
+    boton_busqueda = Button(vista.frame_consulta, text="Buscar", width=25, command = lambda: vista.controlador.funcion_busqueda(vista))
     boton_busqueda.grid(row=0, column=2, columnspan=2, sticky=W+E)
     boton_menu_principal = Button(vista.frame_consulta, text="Volver", width=25, command = vista.funcion_volver_menu_principal)
     boton_menu_principal.grid(row=1, column=2, columnspan=2, sticky=W+E)

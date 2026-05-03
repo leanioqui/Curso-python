@@ -18,7 +18,7 @@ class Controlador():
         for fila in tabla: #Inserta los datos en el Treewiev.
             tree.insert("", "end", text=str(fila[0]), values=(fila[1], fila[2], fila[3]))
 
-    def busqueda(self, vista):
+    def funcion_busqueda(self, vista):
         # 1. Limpiamos el árbol de resultados
         for i in vista.tree_consulta.get_children():
             vista.tree_consulta.delete(i)
@@ -96,7 +96,7 @@ class Controlador():
                 return
 
     #-CALCULOS E INFORMACION
-    def ver_instrucciones(self):
+    def ver_instrucciones(self, vista):
         mensaje = ( #Contiene la informacion de la ventana de ayuda
             "Instrucciones para realizar el analisis de impacto ambiental de su proyecto:\n"
             "\n"
