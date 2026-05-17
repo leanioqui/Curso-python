@@ -2,8 +2,6 @@ from tkinter import *
 from tkinter import ttk
 
 def menu_principal(vista):
-    
-    global barra_titulo
 
     #Creamos la barra de título del menú principal y la colocamos dentro de nuestro frame de altas y bajas.
     vista.barra_titulo = Label(vista.frame_ab, text="Analizador de Impacto Ambiental", background="#46dab7", foreground="black", font=("Arial", 14, "bold"))
