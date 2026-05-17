@@ -1,8 +1,9 @@
-import re
+from .mis_regex import MisRegex
 import requests
 from tkinter import messagebox
 from bs4 import BeautifulSoup
 from models.modelo import Modelo
+import re
 class Controlador():
     def __init__(self):
         self.modelo = Modelo()
@@ -37,10 +38,12 @@ class Controlador():
                 vista.tree_consulta.insert("", "end", text=id_fila, values=valores) 
 
     def funcion_guardar(self, vista): 
-        filtro = re.compile(r'\D') #Crea un patrón de expresión regular que se usará para buscar caracteres no numéricos en el texto.
+        
+        filtro = MisRegex()
         descripcion = str(vista.var_descripcion.get()) #Obtiene el texto, se asegura que el valor sea una cadena y lo guarda en la variable local.
+        
         if vista.var_categoria.get() != "" and vista.var_descripcion.get() != "" and vista.var_impacto.get() != "": #Validación inicial de los campos.
-            if (re.match(filtro, descripcion) == None): #Validación con la expresión regular.
+            if (re.match(filtro.solo_letras(), descripcion) == None): #Validación con la expresión regular.
                 messagebox.showerror("Error", "Ingrese una descripción válida. No se permite iniciar con un caracter numérico.") #Mensaje de error si la descripcion inicia con un caracter numérico.
             else: #Guardar en el registro y actualizar el Treeview.
                 self.modelo.alta_de_registro(vista.var_categoria.get(), vista.var_descripcion.get(), vista.var_impacto.get())
