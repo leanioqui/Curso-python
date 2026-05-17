@@ -62,7 +62,6 @@ class Controlador():
         cat = vista.var_categoria.get().strip()
         desc = vista.var_descripcion.get().strip()
         imp = vista.var_impacto.get()
-
         try:
             # 1. Validaciones (Lanzamos el error apenas detectamos el fallo)
             if not cat and not desc: 
@@ -201,8 +200,11 @@ class Controlador():
     def clima_caba(self): #Función para obtener el clima de CABA en tiempo real
 
         url = "https://www.timeanddate.com/weather/@3433955" # URL del sitio de clima para Buenos Aires
-        encabezados = {'User-Agent': 'Mozilla/5.0'} # Agente de usuario y cabecera para simular una solicitud desde un navegador web, 
-                                                #lo que puede ayudar a evitar bloqueos por parte del sitio web
+        encabezados = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Accept-Language': 'es-ES,es;q=0.9',
+            'Referer': 'https://www.google.com/'
+        } # Agente de usuario y cabecera para simular una solicitud desde un navegador web, lo que puede ayudar a evitar bloqueos por parte del sitio web
 
         try:
             response = requests.get(url, headers=encabezados, timeout=10) # Realiza la solicitud HTTP con un tiempo de espera de 10 segundos, pasado el tiempo de espera, se lanzará una excepción si no se recibe una respuesta del servidor
@@ -221,7 +223,7 @@ class Controlador():
                 else:
                     print("No se encontró el div de temperatura. Revisá el inspector.") # Si no se encuentra el div, se sugiere revisar el inspector del navegador para verificar la estructura HTML actual del sitio
             else:
-                print(f"Error de conexión: {response.status_code}") # Si la solicitud no fue exitosa, se muestra el código de estado HTTP
+                print(f"Error de conexión con la Web del Clima: {response.status_code}") # Si la solicitud no fue exitosa, se muestra el código de estado HTTP
 
         except Exception as e: # Captura cualquier excepción que ocurra durante la solicitud o el análisis
             print(f"Error de raíz: {e}") # Imprime el mensaje de error en caso de que ocurra una excepción, como problemas de conexión o cambios en la estructura del sitio web
