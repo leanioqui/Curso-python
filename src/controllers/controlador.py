@@ -4,6 +4,25 @@ from tkinter import messagebox
 from bs4 import BeautifulSoup
 from models.modelo import Modelo
 import re
+
+class Error(Exception): 
+    pass
+
+class CarNumError(Error):
+    def __init__(self):
+        super().__init__("Error: Ingrese una descripción válida. No se permite iniciar con un caracter numérico.")
+
+class CatDescError(Error):
+    def __init__(self):
+        super().__init__("Error: Debe ingresar una categoría y una descripción.")
+
+class CatError(Error):
+    def __init__(self):
+        super().__init__("Error: Debe ingresar una categoría.")    
+class DescError(Error):
+    def __init__(self):
+        super().__init__("Error: Debe ingresar una descripción.")
+
 class Controlador():
     def __init__(self):
         self.modelo = Modelo()
@@ -36,31 +55,37 @@ class Controlador():
             if termino in str(id_fila) or termino in str(valores[0]).lower() or termino in str(valores[1]).lower() or termino in str(valores[2]).lower():
                 # Insertamos en el árbol de consulta lo encontrado
                 vista.tree_consulta.insert("", "end", text=id_fila, values=valores) 
-
+        
     def funcion_guardar(self, vista): 
         
         filtro = MisRegex()
-        descripcion = str(vista.var_descripcion.get()) #Obtiene el texto, se asegura que el valor sea una cadena y lo guarda en la variable local.
-        
-        if vista.var_categoria.get() != "" and vista.var_descripcion.get() != "" and vista.var_impacto.get() != "": #Validación inicial de los campos.
-            if (re.match(filtro.solo_letras(), descripcion) == None): #Validación con la expresión regular.
-                messagebox.showerror("Error", "Ingrese una descripción válida. No se permite iniciar con un caracter numérico.") #Mensaje de error si la descripcion inicia con un caracter numérico.
-            else: #Guardar en el registro y actualizar el Treeview.
-                self.modelo.alta_de_registro(vista.var_categoria.get(), vista.var_descripcion.get(), vista.var_impacto.get())
-                self.actualizar_tree(vista.tree)
-                vista.var_descripcion.set("")
+        cat = vista.var_categoria.get().strip()
+        desc = vista.var_descripcion.get().strip()
+        imp = vista.var_impacto.get()
 
-        elif vista.var_categoria.get().strip() == "" and vista.var_descripcion.get().strip() == "": #Validación si los campos categoria y descripcion no estan vacios.
-            messagebox.showerror("Error", "Debe ingresar una categoría y una descripción.") #Mensaje de error si los campos categoria y descripcion estan vacios.
-            return
+        try:
+            # 1. Validaciones (Lanzamos el error apenas detectamos el fallo)
+            if not cat and not desc: 
+                raise CatDescError()
+            
+            if not cat: 
+                raise CatError()
+            
+            if not desc: 
+                raise DescError()
+            
+            if re.match(filtro.solo_letras(), desc) is None: 
+                raise CarNumError()
 
-        elif vista.var_categoria.get().strip() == "": #Validación si el campo categoria no esta vacio.
-            messagebox.showerror("Error", "Debe ingresar una categoría.") #Mensaje de error si el campo categoria esta vacio.
-            return
-        
-        elif vista.var_descripcion.get().strip() == "": #Validación si el campo descripción no esta vacio.
-            messagebox.showerror("Error", "Debe ingresar una descripción.") #Mensaje de error si el campo descripción esta vacio.
-            return
+            # 2. Si todo está bien, guardamos
+            self.modelo.alta_de_registro(cat, desc, imp)
+            self.actualizar_tree(vista.tree)
+            vista.var_descripcion.set("")
+
+        except Error as e: 
+            # Capturamos cualquiera de TUS errores aquí
+            messagebox.showerror("Error", str(e))
+            print(e) # Usamos el objeto que ya existe
 
     def funcion_borrar(self, tree):
 
