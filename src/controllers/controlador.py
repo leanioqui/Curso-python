@@ -12,32 +12,31 @@ from models.modelo import Modelo
 import re
 
 class Error(Exception): 
+    """Clase base para las excepciones personalizadas del programa."""
     pass
 
 class CarNumError(Error):
+    """Excepción personalizada que se lanza cuando la descripción ingresada inicia con un carácter numérico"""
     def __init__(self):
         super().__init__("Error: Ingrese una descripción válida. No se permite iniciar con un caracter numérico.")
 
 class CatDescError(Error):
+    """Excepción personalizada que se lanza cuando los campos de categoría y descripción están vacíos."""
     def __init__(self):
         super().__init__("Error: Debe ingresar una categoría y una descripción.")
 
 class CatError(Error):
+    """Excepción personalizada que se lanza cuando el campo de categoría está vacío."""
     def __init__(self):
         super().__init__("Error: Debe ingresar una categoría.")    
 class DescError(Error):
+    """Excepción personalizada que se lanza cuando el campo de descripción está vacío."""
     def __init__(self):
         super().__init__("Error: Debe ingresar una descripción.")
 
 class Controlador():
+    """Clase que maneja la lógica de la aplicación, interactúa con el modelo para gestionar la base de datos y con la vista para actualizar la interfaz gráfica según las acciones del usuario."""
     def __init__(self):
-        """
-        Constructor de la clase Controlador. Inicializa la conexión con el componente 
-        del modelo para la persistencia y gestión de los datos del sistema.
-        
-        :return: No devuelve ningún valor.
-        :rtype: None
-        """
         self.modelo = Modelo()
         
 
@@ -48,8 +47,6 @@ class Controlador():
 
         :param tree: El widget de la interfaz gráfica que muestra los datos en formato de tabla.
         :type tree: ttk.Treeview
-        :return: No devuelve ningún valor.
-        :rtype: None
         """
         tabla_tree = tree.get_children() #Obtiene una lista de los identificadores de los elementos que se encuentran en el nivel superior del árbol.
         for  fila in tabla_tree: #Recorre cada fila del Treeview.
@@ -67,8 +64,6 @@ class Controlador():
 
         :param vista: La instancia de la interfaz gráfica que contiene los widgets y variables de búsqueda.
         :type vista: tk.Toplevel o tk.Tk
-        :return: No devuelve ningún valor.
-        :rtype: None
         """
         # 1. Limpiamos el árbol de resultados
         for i in vista.tree_consulta.get_children():
@@ -94,8 +89,6 @@ class Controlador():
 
         :param vista: La instancia de la interfaz gráfica que contiene las variables y el Treeview.
         :type vista: tk.Toplevel o tk.Tk
-        :return: No devuelve ningún valor.
-        :rtype: None
         """
         filtro = MisRegex()
         cat = vista.var_categoria.get().strip()
@@ -121,7 +114,7 @@ class Controlador():
             vista.var_descripcion.set("")
 
         except Error as e: 
-            # Capturamos cualquiera de TUS errores aquí
+            # Capturamos cualquiera de los errores aquí
             messagebox.showerror("Error", str(e))
             print(e) # Usamos el objeto que ya existe
 
@@ -132,8 +125,6 @@ class Controlador():
 
         :param tree: El widget de la interfaz gráfica desde donde se realiza la selección.
         :type tree: ttk.Treeview
-        :return: No devuelve ningún valor.
-        :rtype: None
         """
         item_seleccionado = tree.selection() #Obtener items seleccionados del Treeview
         if not item_seleccionado:
@@ -143,7 +134,7 @@ class Controlador():
             for i in item_seleccionado: #Reccorrer cada item seleccionado.
                 mi_id = tree.item(i).get("text") #Obtener el id asociado al item.
                 tree.delete(i) #Elimina la fila del Treeview.
-                self.modelo.baja_de_registro(mi_id) #Elimina el registro d ela base de datos.
+                self.modelo.baja_de_registro(mi_id) #Elimina el registro de la base de datos.
 
     def funcion_modificar_variables(self, vista):
         """
@@ -152,8 +143,6 @@ class Controlador():
 
         :param vista: La instancia de la interfaz gráfica que contiene los widgets, variables y el Treeview.
         :type vista: tk.Toplevel o tk.Tk
-        :return: No devuelve ningún valor.
-        :rtype: None
         """
         cat = vista.var_categoria.get().strip()
         desc = vista.var_descripcion.get().strip()
@@ -189,8 +178,6 @@ class Controlador():
 
         :param vista: La instancia de la interfaz gráfica desde la cual se invoca la ventana de ayuda.
         :type vista: tk.Toplevel o tk.Tk
-        :return: No devuelve ningún valor.
-        :rtype: None
         """
         mensaje = ( #Contiene la informacion de la ventana de ayuda
             "Instrucciones para realizar el analisis de impacto ambiental de su proyecto:\n"
@@ -227,8 +214,6 @@ class Controlador():
 
         :param tree: El widget de la interfaz gráfica que contiene las filas con los valores de impacto.
         :type tree: ttk.Treeview
-        :return: No devuelve ningún valor.
-        :rtype: None
         """
         total = 0 #Inicia la variable total en 0.
         for item in tree.get_children(): #Devuelve una lista de los identificadores de los elementos hijos del widget Treeview.
@@ -245,8 +230,6 @@ class Controlador():
 
         :param tree: El widget de la interfaz gráfica que contiene las filas con los datos de impacto.
         :type tree: ttk.Treeview
-        :return: No devuelve ningún valor.
-        :rtype: None
         """
         total = 0 #Inicia la variable total en 0.
         promedio = 0 #Inicia la variable promedio en 0.
@@ -269,8 +252,6 @@ class Controlador():
         :type tree: ttk.Treeview
         :param root: La ventana o instancia raíz de Tkinter requerida para interactuar con el portapapeles.
         :type root: tk.Tk o tk.Toplevel
-        :return: No devuelve ningún valor.
-        :rtype: None
         """
         seleccion = tree.selection()
 
@@ -292,8 +273,6 @@ class Controlador():
 
         :param root: La ventana o instancia raíz de Tkinter que se va a destruir para finalizar el programa.
         :type root: tk.Tk o tk.Toplevel
-        :return: No devuelve ningún valor.
-        :rtype: None
         """
         # 1. Acción personalizada (ej: preguntar si está seguro)
         if messagebox.askokcancel("Salir", "¿Deseas cerrar el programa?"):  #askokcancel muestra un cuadro de diálogo con opciones "OK" y "Cancelar". 

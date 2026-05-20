@@ -13,8 +13,6 @@ def menu_principal(vista):
 
     :param vista: La instancia de la interfaz gráfica donde se renderizan los componentes de Tkinter.
     :type vista: tk.Toplevel o tk.Tk
-    :return: No devuelve ningún valor.
-    :rtype: None
     """
     #Creamos la barra de título del menú principal y la colocamos dentro de nuestro frame de altas y bajas.
     vista.barra_titulo = Label(vista.frame_ab, text="Analizador de Impacto Ambiental", background="#46dab7", foreground="black", font=("Arial", 14, "bold"))
@@ -103,8 +101,6 @@ def configurar_menu_modificar(vista):
 
     :param vista: La instancia de la interfaz gráfica donde se renderizan los widgets de Tkinter.
     :type vista: tk.Toplevel o tk.Tk
-    :return: No devuelve ningún valor.
-    :rtype: None
     """
     #Creamos las etiquetas para la categoría, descripción e impacto y los colocamos dentro de nuestro frame de modificaciones.
     etiqueta_categoria = Label(vista.frame_modificacion, text="Categoría") 
@@ -142,8 +138,6 @@ def configurar_menu_consulta(vista):
 
     :param vista: La instancia de la interfaz gráfica donde se gestionan los frames y los widgets de Tkinter.
     :type vista: tk.Toplevel o tk.Tk
-    :return: No devuelve ningún valor.
-    :rtype: None
     """
     #Escondemos el árbol orginal
     vista.tree.grid_forget()

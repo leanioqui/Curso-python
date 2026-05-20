@@ -18,9 +18,6 @@ def iniciar_aplicacion():
     """
     Punto de entrada principal de la aplicación. Inicializa el ciclo de vida 
     de Tkinter, el componente controlador y la interfaz gráfica de la vista.
-
-    :return: No devuelve ningún valor.
-    :rtype: None
     """
     # Instanciacion del Tkinter (abrimos loop de la ventana)
     root = Tk() 
