@@ -12,7 +12,7 @@ sys.path.insert(0, os.path.abspath('../../../src'))
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'Impacto_Ambiental'
+project = 'Impacto Ambiental'
 copyright = '2026, Leandro Quintela, Franco Gimenez, Fernando Gallego'
 author = 'Leandro Quintela, Franco Gimenez, Fernando Gallego'
 
