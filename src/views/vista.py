@@ -3,8 +3,7 @@ vista.py:
 Este módulo define la clase Vista, que se encarga de manejar la interfaz gráfica de la aplicación.
 """
 
-from tkinter import *
-from tkinter import ttk, messagebox
+from tkinter import ttk, StringVar, IntVar, Frame, W
 from views.interfaces import menu_principal, configurar_menu_consulta, configurar_menu_modificar
 class Vista():
     def __init__(self, root, controlador):

@@ -2,7 +2,7 @@
 interfaces.py:
 Este módulo define las funciones que configuran los diferentes menús de la aplicación, como el menú principal, el menú de modificación y el menú de consulta.
 """
-from tkinter import *
+from tkinter import ttk, Menu, Label, Entry, Button, E, W
 from tkinter import ttk
 
 def menu_principal(vista):

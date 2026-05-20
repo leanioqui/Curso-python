@@ -155,31 +155,34 @@ class Controlador():
         :return: No devuelve ningún valor.
         :rtype: None
         """
+        cat = vista.var_categoria.get().strip()
+        desc = vista.var_descripcion.get().strip()
+        imp = vista.var_impacto.get()
         filtro = re.compile(r'\D') #Crea un patrón de expresión regular que se usará para buscar caracteres no numéricos en el texto.
         descripcion = str(vista.var_descripcion.get()) #Obtiene el texto, se asegura que el valor sea una cadena y lo guarda en la variable local.
         item_seleccionado = vista.tree.focus() #Obtiene el ítem enfocado en el Treeview.
         if not item_seleccionado:
             messagebox.showerror("Error", "Debe seleccionar un registro para modificar.") #Mensaje de error si no hay lista seleccionada.
         else:
-            if vista.var_categoria.get().strip() == "" and vista.var_descripcion.get().strip() == "":
+            if cat == "" and desc == "":
                 messagebox.showerror("Error", "Debe ingresar una categoría y una descripción.") #Mensaje de error si los campos categoria y descripcion estan vacios.
                 return
-            if vista.var_categoria.get().strip() == "":
+            if cat == "":
                 messagebox.showerror("Error", "Debe ingresar una categoría.") #Mensaje de error si el campo categoria esta vacio.
                 return
-            if vista.var_descripcion.get().strip() == "":
+            if desc == "":
                 messagebox.showerror("Error", "Debe ingresar una descripción.") #Mensaje de error si el campo descripción esta vacio.
                 return
             if re.match(filtro, descripcion): #Validación con la expresión regular.
-                vista.tree.item(item_seleccionado, values=(vista.var_categoria.get(), vista.var_descripcion.get(), vista.var_impacto.get())) #Validación inicial de los campos.
+                vista.tree.item(item_seleccionado, values=(cat, desc, imp)) #Validación inicial de los campos.
                 mi_id = vista.tree.item(item_seleccionado).get("text") #Obtener el id del registro.
-                self.modelo.actualizar(mi_id, vista.var_categoria.get(), vista.var_descripcion.get(), vista.var_impacto.get()) #Actualiza el registro en la base de datos.
+                self.modelo.actualizar(cat, desc, imp, mi_id) #Actualiza el registro en la base de datos.
             else:
                 messagebox.showerror("Error", "No se permite iniciar la descripción con caracteres numéricos.") #Mensaje de error si la descripcion inicia con un caracter numérico.
                 return
 
     #-CALCULOS E INFORMACION
-    def ver_instrucciones(self, vista):
+    def ver_instrucciones(self):
         """
         Genera y despliega una ventana emergente de información con el manual de usuario,
         los rangos de referencia de impacto y las pautas operativas del sistema.
