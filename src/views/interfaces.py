@@ -1,8 +1,21 @@
+"""
+interfaces.py:
+Este módulo define las funciones que configuran los diferentes menús de la aplicación, como el menú principal, el menú de modificación y el menú de consulta.
+"""
 from tkinter import *
 from tkinter import ttk
 
 def menu_principal(vista):
+    """
+    Construye la interfaz del menú principal en la vista, configurando los campos de 
+    entrada (comboboxes y entries), la botonera del CRUD, las funciones de cálculo 
+    y la barra superior de menús desplegables con sus respectivas cascadas de eventos.
 
+    :param vista: La instancia de la interfaz gráfica donde se renderizan los componentes de Tkinter.
+    :type vista: tk.Toplevel o tk.Tk
+    :return: No devuelve ningún valor.
+    :rtype: None
+    """
     #Creamos la barra de título del menú principal y la colocamos dentro de nuestro frame de altas y bajas.
     vista.barra_titulo = Label(vista.frame_ab, text="Analizador de Impacto Ambiental", background="#46dab7", foreground="black", font=("Arial", 14, "bold"))
     vista.barra_titulo.grid(row=0, column=0,columnspan=10, sticky="we") 
@@ -83,7 +96,16 @@ def menu_principal(vista):
     menu_desplegable.add_cascade(label="⚙", menu=menu_ajustes) #Hacemos que se añada esta cascada al menu 'menu desplegable'
 
 def configurar_menu_modificar(vista):
-   
+    """
+    Construye la interfaz del submenú de modificaciones dentro de la vista, inicializando
+    los campos de entrada selectivos y de texto con los datos actuales del registro,
+    y enlazando los botones para confirmar la actualización o regresar al menú principal.
+
+    :param vista: La instancia de la interfaz gráfica donde se renderizan los widgets de Tkinter.
+    :type vista: tk.Toplevel o tk.Tk
+    :return: No devuelve ningún valor.
+    :rtype: None
+    """
     #Creamos las etiquetas para la categoría, descripción e impacto y los colocamos dentro de nuestro frame de modificaciones.
     etiqueta_categoria = Label(vista.frame_modificacion, text="Categoría") 
     etiqueta_categoria.grid(row=0, column=0, sticky = W) 
@@ -113,6 +135,16 @@ def configurar_menu_modificar(vista):
     boton_save.grid(row=1, column=6, sticky=E)
 
 def configurar_menu_consulta(vista):
+    """
+    Modifica la disposición de la interfaz gráfica ocultando el Treeview principal,
+    renderizando el Treeview específico de consultas e inicializando los campos 
+    y botones para ejecutar búsquedas parciales o regresar al menú.
+
+    :param vista: La instancia de la interfaz gráfica donde se gestionan los frames y los widgets de Tkinter.
+    :type vista: tk.Toplevel o tk.Tk
+    :return: No devuelve ningún valor.
+    :rtype: None
+    """
     #Escondemos el árbol orginal
     vista.tree.grid_forget()
 

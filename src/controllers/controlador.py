@@ -1,3 +1,9 @@
+"""
+controlador.py:
+Este módulo define la clase Controlador, que se encarga de manejar la lógica de la aplicación y de interactuar con la base de datos a través del modelo, así como de manejar las acciones de la interfaz gráfica a través de la vista.
+Además, incluye funciones para realizar cálculos relacionados con el impacto ambiental y para obtener información en tiempo real, como el clima de CABA.
+"""
+
 from .mis_regex import MisRegex
 import requests
 from tkinter import messagebox
@@ -25,10 +31,26 @@ class DescError(Error):
 
 class Controlador():
     def __init__(self):
+        """
+        Constructor de la clase Controlador. Inicializa la conexión con el componente 
+        del modelo para la persistencia y gestión de los datos del sistema.
+        
+        :return: No devuelve ningún valor.
+        :rtype: None
+        """
         self.modelo = Modelo()
         
 
     def actualizar_tree(self, tree):
+        """
+        Limpia todas las filas actuales del widget Treeview e inserta los datos
+        actualizados obtenidos desde la base de datos a través del modelo.
+
+        :param tree: El widget de la interfaz gráfica que muestra los datos en formato de tabla.
+        :type tree: ttk.Treeview
+        :return: No devuelve ningún valor.
+        :rtype: None
+        """
         tabla_tree = tree.get_children() #Obtiene una lista de los identificadores de los elementos que se encuentran en el nivel superior del árbol.
         for  fila in tabla_tree: #Recorre cada fila del Treeview.
             tree.delete(fila) #Elimina la fila del Treeview.
@@ -39,6 +61,15 @@ class Controlador():
             tree.insert("", "end", text=str(fila[0]), values=(fila[1], fila[2], fila[3]))
 
     def funcion_busqueda(self, vista):
+        """
+        Busca un término de texto en las columnas del Treeview principal y filtra
+        los resultados coincidentes, insertándolos en el Treeview de consultas.
+
+        :param vista: La instancia de la interfaz gráfica que contiene los widgets y variables de búsqueda.
+        :type vista: tk.Toplevel o tk.Tk
+        :return: No devuelve ningún valor.
+        :rtype: None
+        """
         # 1. Limpiamos el árbol de resultados
         for i in vista.tree_consulta.get_children():
             vista.tree_consulta.delete(i)
@@ -57,7 +88,15 @@ class Controlador():
                 vista.tree_consulta.insert("", "end", text=id_fila, values=valores) 
         
     def funcion_guardar(self, vista): 
-        
+        """
+        Valida las entradas de la interfaz de usuario mediante expresiones regulares 
+        y excepciones personalizadas, y da de alta el registro en la base de datos.
+
+        :param vista: La instancia de la interfaz gráfica que contiene las variables y el Treeview.
+        :type vista: tk.Toplevel o tk.Tk
+        :return: No devuelve ningún valor.
+        :rtype: None
+        """
         filtro = MisRegex()
         cat = vista.var_categoria.get().strip()
         desc = vista.var_descripcion.get().strip()
@@ -87,7 +126,15 @@ class Controlador():
             print(e) # Usamos el objeto que ya existe
 
     def funcion_borrar(self, tree):
+        """
+        Obtiene los elementos seleccionados en el Treeview, valida que exista al menos 
+        una selección y elimina los registros tanto de la interfaz gráfica como de la base de datos.
 
+        :param tree: El widget de la interfaz gráfica desde donde se realiza la selección.
+        :type tree: ttk.Treeview
+        :return: No devuelve ningún valor.
+        :rtype: None
+        """
         item_seleccionado = tree.selection() #Obtener items seleccionados del Treeview
         if not item_seleccionado:
             messagebox.showerror("Error", "Debe seleccionar un registro para borrar.") #Mensaje de error si el item no esta seleccionado al intentar borrar.
@@ -99,6 +146,15 @@ class Controlador():
                 self.modelo.baja_de_registro(mi_id) #Elimina el registro d ela base de datos.
 
     def funcion_modificar_variables(self, vista):
+        """
+        Valida los campos de entrada mediante expresiones regulares y lógica condicional,
+        y actualiza los datos del registro seleccionado tanto en el Treeview como en la base de datos.
+
+        :param vista: La instancia de la interfaz gráfica que contiene los widgets, variables y el Treeview.
+        :type vista: tk.Toplevel o tk.Tk
+        :return: No devuelve ningún valor.
+        :rtype: None
+        """
         filtro = re.compile(r'\D') #Crea un patrón de expresión regular que se usará para buscar caracteres no numéricos en el texto.
         descripcion = str(vista.var_descripcion.get()) #Obtiene el texto, se asegura que el valor sea una cadena y lo guarda en la variable local.
         item_seleccionado = vista.tree.focus() #Obtiene el ítem enfocado en el Treeview.
@@ -124,6 +180,15 @@ class Controlador():
 
     #-CALCULOS E INFORMACION
     def ver_instrucciones(self, vista):
+        """
+        Genera y despliega una ventana emergente de información con el manual de usuario,
+        los rangos de referencia de impacto y las pautas operativas del sistema.
+
+        :param vista: La instancia de la interfaz gráfica desde la cual se invoca la ventana de ayuda.
+        :type vista: tk.Toplevel o tk.Tk
+        :return: No devuelve ningún valor.
+        :rtype: None
+        """
         mensaje = ( #Contiene la informacion de la ventana de ayuda
             "Instrucciones para realizar el analisis de impacto ambiental de su proyecto:\n"
             "\n"
@@ -153,6 +218,15 @@ class Controlador():
         messagebox.showinfo("Instrucciones del programa", mensaje)
 
     def funcion_total(self, tree):
+        """
+        Recorre todos los elementos activos en el Treeview, extrae los valores numéricos
+        de la columna de impactos y despliega un cuadro de diálogo con el valor acumulado total.
+
+        :param tree: El widget de la interfaz gráfica que contiene las filas con los valores de impacto.
+        :type tree: ttk.Treeview
+        :return: No devuelve ningún valor.
+        :rtype: None
+        """
         total = 0 #Inicia la variable total en 0.
         for item in tree.get_children(): #Devuelve una lista de los identificadores de los elementos hijos del widget Treeview.
             valores = tree.item(item, "values") #Se utiliza para obtener los valores de un elemento específico del widget Treeview.
@@ -161,6 +235,16 @@ class Controlador():
         messagebox.showinfo("Total del Impacto", f"El valor total del impacto ambiental es: {total}") #Mostrar venetana emergente con el resultado total.
 
     def funcion_promedio(self, tree):
+        """
+        Calcula el promedio de los impactos ambientales activos en el Treeview,
+        excluyendo de la muestra estadística aquellos valores considerados neutros (0),
+        y despliega un cuadro de diálogo con el resultado redondeado a dos decimales.
+
+        :param tree: El widget de la interfaz gráfica que contiene las filas con los datos de impacto.
+        :type tree: ttk.Treeview
+        :return: No devuelve ningún valor.
+        :rtype: None
+        """
         total = 0 #Inicia la variable total en 0.
         promedio = 0 #Inicia la variable promedio en 0.
         contador = 0 #Inicia la variable contador en 0.
@@ -174,6 +258,17 @@ class Controlador():
         messagebox.showinfo("Promedio de impacto", f"El valor promedio del impacto ambiental es: {promedio}") #Mostrar venetana emergente con el valor promedio.
 
     def copiar_fila(self, tree, root): #Permite copiar la/las filas seleccionadas
+        """
+        Obtiene los elementos seleccionados en el Treeview, concatena sus valores 
+        en formato de texto separado por tabulaciones y los transfiere al portapapeles del sistema.
+
+        :param tree: El widget de la interfaz gráfica desde donde se extrae la selección de filas.
+        :type tree: ttk.Treeview
+        :param root: La ventana o instancia raíz de Tkinter requerida para interactuar con el portapapeles.
+        :type root: tk.Tk o tk.Toplevel
+        :return: No devuelve ningún valor.
+        :rtype: None
+        """
         seleccion = tree.selection()
 
         if not seleccion: #Verifica si hay al menos una fila seleccionada
@@ -188,6 +283,15 @@ class Controlador():
         root.clipboard_append(texto) #Copia el texto generado al portapapeles.
    
     def al_cerrar(self, root):
+        """
+        Gestiona el evento de cierre de la aplicación, solicitando confirmación al usuario
+        y asegurando la correcta desconexión de la base de datos antes de destruir la ventana principal.
+
+        :param root: La ventana o instancia raíz de Tkinter que se va a destruir para finalizar el programa.
+        :type root: tk.Tk o tk.Toplevel
+        :return: No devuelve ningún valor.
+        :rtype: None
+        """
         # 1. Acción personalizada (ej: preguntar si está seguro)
         if messagebox.askokcancel("Salir", "¿Deseas cerrar el programa?"):  #askokcancel muestra un cuadro de diálogo con opciones "OK" y "Cancelar". 
                                                                             #Devuelve True si el usuario hace clic en "OK" y False si hace clic en "Cancelar".
@@ -198,7 +302,13 @@ class Controlador():
             root.destroy()
 
     def clima_caba(self): #Función para obtener el clima de CABA en tiempo real
+        """
+        Realiza una petición HTTP GET con cabeceras personalizadas a un proveedor externo
+        de clima y parsea el árbol HTML para extraer la temperatura actual de CABA.
 
+        :return: La cadena de texto con la temperatura actual (ej: "24 °C") si la extracción es exitosa, o None en caso de error.
+        :rtype: str o None
+        """
         url = "https://www.timeanddate.com/weather/@3433955" # URL del sitio de clima para Buenos Aires
         encabezados = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',

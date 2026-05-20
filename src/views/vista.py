@@ -1,9 +1,28 @@
+"""
+vista.py:
+Este módulo define la clase Vista, que se encarga de manejar la interfaz gráfica de la aplicación.
+"""
+
 from tkinter import *
 from tkinter import ttk, messagebox
-
 from views.interfaces import menu_principal, configurar_menu_consulta, configurar_menu_modificar
 class Vista():
     def __init__(self, root, controlador):
+        """
+        Inicializa la interfaz gráfica de la aplicación de Gestión de Riesgos e Impacto Ambiental.
+
+        Configura las variables de Tkinter, define los diferentes frames (menús) de la aplicación,
+        los componentes Treeview (tanto el principal como el de consulta) y establece las reglas de
+        responsividad de la ventana. Además, intercepta el evento de cierre de la ventana ("WM_DELETE_WINDOW")
+        para asegurar que se ejecute la lógica de salida personalizada del controlador antes de destruir la interfaz.
+
+        :param root: La ventana principal de la aplicación.
+        :type root: tkinter.Tk
+        :param controlador: La instancia del controlador que maneja la lógica de negocio y eventos.
+        :type controlador: Controlador
+        :return: No devuelve ningún valor.
+        :rtype: None
+        """
         self.controlador = controlador
         self.root = root
         
@@ -95,6 +114,23 @@ class Vista():
 
 
     def aplicar_estilo_recursivo(self, root, color_botones, color_letra): #Esta funcion aplica colores de fondo y texto a todos los widgets de la interfaz de manera recursiva
+        """
+        Aplica colores de fondo y texto a todos los widgets de la interfaz de manera recursiva.
+
+        Utiliza el método ``winfo_children()`` para obtener los elementos hijos directos del contenedor
+        actual. Intenta aplicar las propiedades de fondo (`bg`) y texto (`fg`) mediante bloques try-except
+        para evitar fallos en componentes que no soportan texto (como los objetos Frame). Al finalizar con
+        los elementos directos, se invoca a sí mismo para continuar la propagación en los niveles inferiores.
+
+        :param root: El widget contenedor o ventana desde el cual iniciar la propagación del estilo.
+        :type root: tkinter.Widget o tkinter.Tk
+        :param color_botones: El color en formato hexadecimal o nombre para el fondo (background).
+        :type color_botones: str
+        :param color_letra: El color en formato hexadecimal o nombre para el texto (foreground).
+        :type color_letra: str
+        :return: No devuelve ningún valor.
+        :rtype: None
+        """
         for w in root.winfo_children(): #winfo_children() devuelve una lista de todos los widgets hijos directos del widget root, 
                                         # es decir, los widgets que están contenidos dentro de root.
             try: w.configure(bg=color_botones, fg=color_letra) # Intenta pintar fondo y letra
@@ -104,6 +140,20 @@ class Vista():
             self.aplicar_estilo_recursivo(w, color_botones, color_letra) # Sigue con los hijos
 
     def modo_claro(self, root): #Funcion que define los colores del Modo Claro
+        """
+        Define y aplica la paleta de colores correspondiente al Modo Claro en la interfaz gráfica.
+
+        Configura el tema de los componentes ``ttk`` utilizando el estilo 'vista' y establece el color de 
+        la ventana principal al valor predeterminado de Windows (``SystemButtonFace``) para mantener la 
+        consistencia visual del sistema operativo. Posteriormente, invoca de manera interna la propagación 
+        recursiva de estilos para modificar el fondo y color de texto (negro) de todos los widgets hijos, 
+        finalizando con la personalización de la barra de títulos.
+
+        :param root: La ventana o contenedor principal al que se le aplicará el cambio de tema.
+        :type root: tkinter.Tk o tkinter.Widget
+        :return: No devuelve ningún valor.
+        :rtype: None
+        """
         style = ttk.Style()
         style.theme_use('vista')
         self.root.config(bg="SystemButtonFace") #SystemButtonFace es el color de fondo predeterminado de los botones en Windows, 
@@ -114,6 +164,20 @@ class Vista():
         self.barra_titulo.config(background="#46dab7", foreground="black")
 
     def modo_oscuro(self, root): #Funcion que define los colores del Modo Oscuro
+        """
+        Define y aplica la paleta de colores correspondiente al Modo Oscuro en la interfaz gráfica.
+
+        Cambia el tema activo de los componentes ``ttk`` al estilo 'clam' y reconfigura los elementos
+        visuales avanzados (como el Treeview y el Combobox) para que utilicen fondos oscuros (``#1e1e1e``)
+        y textos claros, incluyendo el comportamiento de selección (resaltado en azul ``#007acc``). 
+        Finalmente, establece el fondo general de la aplicación en gris oscuro (``#121212``), propaga 
+        los colores de manera recursiva a todos los widgets hijos y actualiza la barra de títulos.
+
+        :param root: La ventana o contenedor principal al que se le aplicará el cambio de tema.
+        :type root: tkinter.Tk o tkinter.Widget
+        :return: No devuelve ningún valor.
+        :rtype: None
+        """
         style = ttk.Style()
         style.theme_use("clam") 
         bg, fg = "#121212", "#ffffff" # Variables cortas
@@ -129,6 +193,18 @@ class Vista():
         self.barra_titulo.config(background="#1f6857", foreground=fg)
 
     def funcion_volver_menu_principal(self):
+        """
+        Restablece la interfaz gráfica al estado del menú principal de altas y bajas (AB).
+
+        Oculta los contenedores secundarios utilizando el método ``grid_forget()`` (tanto el frame de 
+        modificaciones como el de consultas) y remueve de la vista el árbol secundario. Posteriormente, 
+        vuelve a posicionar el frame principal y el Treeview original en la grilla. Como paso final de 
+        limpieza, vacía por completo el árbol de consultas recorriendo y eliminando de forma explícita 
+        todos sus nodos hijos.
+
+        :return: No devuelve ningún valor.
+        :rtype: None
+        """
         #Escondemos los frames de modificaciones y consultas 
         self.frame_modificacion.grid_forget()
         self.frame_consulta.grid_forget()
@@ -147,11 +223,33 @@ class Vista():
             self.tree_consulta.delete(i)
 
     def correr_modificar(self):
+        """
+        Cambia el estado de la interfaz gráfica para mostrar el menú de modificaciones.
+
+        Oculta el frame principal de altas y bajas (AB) utilizando ``grid_forget()`` y 
+        posiciona el contenedor de modificaciones en la grilla. Finalmente, invoca a la 
+        función externa ``configurar_menu_modificar`` para inicializar los componentes y 
+        botones específicos de esta vista.
+
+        :return: No devuelve ningún valor.
+        :rtype: None
+        """
         self.frame_ab.grid_forget()
         self.frame_modificacion.grid(row=1, column=0)
         configurar_menu_modificar(self)
 
     def correr_consultar(self):
+        """
+        Cambia el estado de la interfaz gráfica para mostrar el menú de consultas.
+
+        Oculta el frame principal de altas y bajas (AB) utilizando ``grid_forget()`` y 
+        posiciona el contenedor de consultas en la grilla. Finalmente, invoca a la 
+        función externa ``configurar_menu_consulta`` para inicializar los componentes y 
+        criterios de búsqueda específicos de esta vista.
+
+        :return: No devuelve ningún valor.
+        :rtype: None
+        """
         self.frame_ab.grid_forget()
         self.frame_consulta.grid(row=1, column=0)
         configurar_menu_consulta(self)
