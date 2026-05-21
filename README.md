@@ -14,7 +14,7 @@ El objetivo principal es ofrecer una herramienta intuitiva, educativa y funciona
 
 ## 📌 Gestión Integral de Registros (CRUD)
 
-Interfaz completa para:
+### Interfaz completa para:
 
 - Alta de registros ambientales
 - Modificación de datos existentes
@@ -27,15 +27,15 @@ Toda la información es persistida en una base de datos relacional SQLite.
 
 ## 🌡️ Datos Ambientales en Tiempo Real
 
-El sistema implementa técnicas de Web Scraping utilizando `Requests` y `BeautifulSoup` para obtener la temperatura actual de CABA (Ciudad Autónoma de Buenos Aires), proporcionando contexto ambiental dinámico dentro de la aplicación.
+### El sistema implementa técnicas de Web Scraping utilizando `Requests` y `BeautifulSoup` para obtener la temperatura actual de CABA (Ciudad Autónoma de Buenos Aires), proporcionando contexto ambiental dinámico dentro de la aplicación.
 
 ---
 
 ## 🔐 Validaciones y Seguridad
 
-Se utilizan expresiones regulares (Regex) para validar entradas del usuario y evitar inconsistencias en los datos almacenados.
+### Se utilizan expresiones regulares (Regex) para validar entradas del usuario y evitar inconsistencias en los datos almacenados.
 
-Además, la interfaz incorpora:
+### Además, la interfaz incorpora:
 
 - 🌙 Modo Oscuro
 - ☀️ Modo Claro
@@ -46,7 +46,7 @@ con el objetivo de mejorar la experiencia y ergonomía visual del usuario.
 
 ## 📊 Análisis Estadístico
 
-El sistema calcula automáticamente:
+### El sistema calcula automáticamente:
 
 - Impacto ambiental total
 - Impacto promedio
@@ -72,7 +72,7 @@ permitiendo identificar rápidamente tendencias e impactos críticos.
 
 # 📋 Metodología de Medición
 
-Se implementa un método de lista de chequeo para transformar observaciones cualitativas en datos cuantitativos procesables mediante una escala de ponderación simplificada:
+### Se implementa un método de lista de chequeo para transformar observaciones cualitativas en datos cuantitativos procesables mediante una escala de ponderación simplificada:
 
 | Valor | Clasificación | Descripción |
 | :--- | :--- | :--- |
@@ -84,7 +84,7 @@ Se implementa un método de lista de chequeo para transformar observaciones cual
 
 # 🧩 Arquitectura del Proyecto
 
-El sistema fue desarrollado siguiendo una estructura basada en el patrón MVC (Modelo - Vista - Controlador), permitiendo una mejor organización del código y separación de responsabilidades.
+### El sistema fue desarrollado siguiendo una estructura basada en el patrón MVC (Modelo - Vista - Controlador), permitiendo una mejor organización del código y separación de responsabilidades.
 
 Estructura general:
 
@@ -143,7 +143,7 @@ Curso-python/
 
 # 📖 Generación de Documentación Técnica
 
-## El proyecto incluye documentación generada con Sphinx.
+### El proyecto incluye documentación generada con Sphinx.
 
 **Instalar dependencias:**
 ```bash
@@ -167,13 +167,13 @@ para_sphinx/archivos/docs/_build/html/
 
 ## 📄 Licencia
 
-Este proyecto está bajo la Licencia MIT.
+## Este proyecto está bajo la Licencia MIT.
 
 ---
 
-#🌱 Objetivo Académico
+## 🌱 Objetivo Académico
 
-##Este sistema fue desarrollado como proyecto académico integrador, aplicando conocimientos de:
+### Este sistema fue desarrollado como proyecto académico integrador, aplicando conocimientos de:
 
 * **Programación Orientada a Objetos en Python**
 * **Bases de datos relacionales**
