@@ -77,7 +77,7 @@ def menu_principal(vista):
 
     #Creamos el botón 'Instrucciones' dentro del menú 'Ayuda', hacemos que al clickear en él se ejecute la función ver_instrucciones, ubicada en controlador,
     #con ejecución en vista tambien (Parametros)
-    menu_ayuda.add_command(label="Instrucciones", command=lambda: vista.controlador.ver_instrucciones(vista))
+    menu_ayuda.add_command(label="Instrucciones", command=lambda: vista.controlador.ver_instrucciones())
     menu_ayuda.add_separator() #Añadimos un separador por si en un futuro deseamos colocar mas botones
     menu_desplegable.add_cascade(label="Ayuda", menu=menu_ayuda) #Hacemos que se añada esta cascada al menu 'menu desplegable'
 
