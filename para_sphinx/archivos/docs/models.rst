@@ -1,10 +1,7 @@
-models package
-==============
+Componente Modelo
+=================
 
-Submodules
-----------
-
-models.modelo module
+Modulo modelo
 --------------------
 
 .. automodule:: models.modelo
@@ -12,10 +9,3 @@ models.modelo module
    :show-inheritance:
    :undoc-members:
 
-Module contents
----------------
-
-.. automodule:: models
-   :members:
-   :show-inheritance:
-   :undoc-members:

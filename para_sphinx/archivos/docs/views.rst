@@ -1,10 +1,10 @@
-views package
-=============
+Componente Vista
+================
 
-Submodules
-----------
+Submodulos:
+-----------
 
-views.interfaces module
+Modulo interfaces
 -----------------------
 
 .. automodule:: views.interfaces
@@ -12,7 +12,7 @@ views.interfaces module
    :show-inheritance:
    :undoc-members:
 
-views.vista module
+Modulo vista
 ------------------
 
 .. automodule:: views.vista
@@ -20,10 +20,3 @@ views.vista module
    :show-inheritance:
    :undoc-members:
 
-Module contents
----------------
-
-.. automodule:: views
-   :members:
-   :show-inheritance:
-   :undoc-members:
