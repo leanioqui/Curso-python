@@ -4,11 +4,11 @@
 ![SQLite](https://img.shields.io/badge/Database-SQLite3-lightgrey.svg)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
-[![CI Status](https://github.com/leanioqui/Curso-python/actions/workflows/ci.yml/badge.svg)](https://github.com/leanioqui/Curso-python/actions)
-[![Install Status](https://github.com/leanioqui/Curso-python/actions/workflows/ci.yml/badge.svg?job=install)](https://github.com/leanioqui/Curso-python/actions)
-[![Lint Status](https://github.com/leanioqui/Curso-python/actions/workflows/ci.yml/badge.svg?job=lint)](https://github.com/leanioqui/Curso-python/actions)
-[![Format Status](https://github.com/leanioqui/Curso-python/actions/workflows/ci.yml/badge.svg?job=format)](https://github.com/leanioqui/Curso-python/actions)
-[![Docs Status](https://github.com/leanioqui/Curso-python/actions/workflows/ci.yml/badge.svg?job=docs)](https://github.com/leanioqui/Curso-python/actions)
+![CI Status](https://img.shields.io/github/actions/workflow/status/leanioqui/Curso-python/ci.yml?branch=main&label=CI)
+![Install Status](https://img.shields.io/github/actions/workflow/status/leanioqui/Curso-python/ci.yml?branch=main&label=Install&event=push)
+![Lint Status](https://img.shields.io/github/actions/workflow/status/leanioqui/Curso-python/ci.yml?branch=main&label=Lint&event=push)
+![Format Status](https://img.shields.io/github/actions/workflow/status/leanioqui/Curso-python/ci.yml?branch=main&label=Format&event=push)
+![Docs Status](https://img.shields.io/github/actions/workflow/status/leanioqui/Curso-python/ci.yml?branch=main&label=Docs&event=push)
 
 Este proyecto nace como una solución tecnológica diseñada para empresas que necesitan centralizar, registrar y auditar el impacto ambiental de sus actividades operativas. El sistema permite almacenar acciones ambientales, categorizarlas según su naturaleza (Física, Biológica o Socioeconómica) y cuantificar su incidencia de manera sistemática mediante métricas simples y procesables.
 
