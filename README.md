@@ -153,7 +153,8 @@ Curso-python/
 
 **Instalar dependencias:**
 ```bash
-python src/main.py
+cd para_sphinx
+make html
 ```
 
 **Los archivos HTML generados se encontrarán en:**
