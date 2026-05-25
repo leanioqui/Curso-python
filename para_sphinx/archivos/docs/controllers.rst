@@ -1,10 +1,10 @@
-controllers package
-===================
+Componente Controlador
+======================
 
-Submodules
-----------
+Submodulos:
+-----------
 
-controllers.controlador module
+Modulo controlador
 ------------------------------
 
 .. automodule:: controllers.controlador
@@ -12,7 +12,7 @@ controllers.controlador module
    :show-inheritance:
    :undoc-members:
 
-controllers.mis\_regex module
+Modulo mis\_regex
 -----------------------------
 
 .. automodule:: controllers.mis_regex
@@ -20,10 +20,3 @@ controllers.mis\_regex module
    :show-inheritance:
    :undoc-members:
 
-Module contents
----------------
-
-.. automodule:: controllers
-   :members:
-   :show-inheritance:
-   :undoc-members:

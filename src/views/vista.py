@@ -3,8 +3,7 @@ vista.py:
 Este módulo define la clase Vista, que se encarga de manejar la interfaz gráfica de la aplicación.
 """
 
-from tkinter import *
-from tkinter import ttk, messagebox
+from tkinter import ttk, StringVar, IntVar, Frame, W
 from views.interfaces import menu_principal, configurar_menu_consulta, configurar_menu_modificar
 class Vista():
     def __init__(self, root, controlador):
@@ -20,8 +19,6 @@ class Vista():
         :type root: tkinter.Tk
         :param controlador: La instancia del controlador que maneja la lógica de negocio y eventos.
         :type controlador: Controlador
-        :return: No devuelve ningún valor.
-        :rtype: None
         """
         self.controlador = controlador
         self.root = root
@@ -128,8 +125,6 @@ class Vista():
         :type color_botones: str
         :param color_letra: El color en formato hexadecimal o nombre para el texto (foreground).
         :type color_letra: str
-        :return: No devuelve ningún valor.
-        :rtype: None
         """
         for w in root.winfo_children(): #winfo_children() devuelve una lista de todos los widgets hijos directos del widget root, 
                                         # es decir, los widgets que están contenidos dentro de root.
@@ -151,8 +146,6 @@ class Vista():
 
         :param root: La ventana o contenedor principal al que se le aplicará el cambio de tema.
         :type root: tkinter.Tk o tkinter.Widget
-        :return: No devuelve ningún valor.
-        :rtype: None
         """
         style = ttk.Style()
         style.theme_use('vista')
@@ -175,8 +168,6 @@ class Vista():
 
         :param root: La ventana o contenedor principal al que se le aplicará el cambio de tema.
         :type root: tkinter.Tk o tkinter.Widget
-        :return: No devuelve ningún valor.
-        :rtype: None
         """
         style = ttk.Style()
         style.theme_use("clam") 
@@ -201,9 +192,6 @@ class Vista():
         vuelve a posicionar el frame principal y el Treeview original en la grilla. Como paso final de 
         limpieza, vacía por completo el árbol de consultas recorriendo y eliminando de forma explícita 
         todos sus nodos hijos.
-
-        :return: No devuelve ningún valor.
-        :rtype: None
         """
         #Escondemos los frames de modificaciones y consultas 
         self.frame_modificacion.grid_forget()
@@ -230,9 +218,6 @@ class Vista():
         posiciona el contenedor de modificaciones en la grilla. Finalmente, invoca a la 
         función externa ``configurar_menu_modificar`` para inicializar los componentes y 
         botones específicos de esta vista.
-
-        :return: No devuelve ningún valor.
-        :rtype: None
         """
         self.frame_ab.grid_forget()
         self.frame_modificacion.grid(row=1, column=0)
@@ -246,9 +231,6 @@ class Vista():
         posiciona el contenedor de consultas en la grilla. Finalmente, invoca a la 
         función externa ``configurar_menu_consulta`` para inicializar los componentes y 
         criterios de búsqueda específicos de esta vista.
-
-        :return: No devuelve ningún valor.
-        :rtype: None
         """
         self.frame_ab.grid_forget()
         self.frame_consulta.grid(row=1, column=0)

@@ -2,7 +2,7 @@
 interfaces.py:
 Este módulo define las funciones que configuran los diferentes menús de la aplicación, como el menú principal, el menú de modificación y el menú de consulta.
 """
-from tkinter import *
+from tkinter import ttk, Menu, Label, Entry, Button, E, W
 from tkinter import ttk
 
 def menu_principal(vista):
@@ -13,8 +13,6 @@ def menu_principal(vista):
 
     :param vista: La instancia de la interfaz gráfica donde se renderizan los componentes de Tkinter.
     :type vista: tk.Toplevel o tk.Tk
-    :return: No devuelve ningún valor.
-    :rtype: None
     """
     #Creamos la barra de título del menú principal y la colocamos dentro de nuestro frame de altas y bajas.
     vista.barra_titulo = Label(vista.frame_ab, text="Analizador de Impacto Ambiental", background="#46dab7", foreground="black", font=("Arial", 14, "bold"))
@@ -79,7 +77,7 @@ def menu_principal(vista):
 
     #Creamos el botón 'Instrucciones' dentro del menú 'Ayuda', hacemos que al clickear en él se ejecute la función ver_instrucciones, ubicada en controlador,
     #con ejecución en vista tambien (Parametros)
-    menu_ayuda.add_command(label="Instrucciones", command=lambda: vista.controlador.ver_instrucciones(vista))
+    menu_ayuda.add_command(label="Instrucciones", command=lambda: vista.controlador.ver_instrucciones())
     menu_ayuda.add_separator() #Añadimos un separador por si en un futuro deseamos colocar mas botones
     menu_desplegable.add_cascade(label="Ayuda", menu=menu_ayuda) #Hacemos que se añada esta cascada al menu 'menu desplegable'
 
@@ -103,8 +101,6 @@ def configurar_menu_modificar(vista):
 
     :param vista: La instancia de la interfaz gráfica donde se renderizan los widgets de Tkinter.
     :type vista: tk.Toplevel o tk.Tk
-    :return: No devuelve ningún valor.
-    :rtype: None
     """
     #Creamos las etiquetas para la categoría, descripción e impacto y los colocamos dentro de nuestro frame de modificaciones.
     etiqueta_categoria = Label(vista.frame_modificacion, text="Categoría") 
@@ -142,8 +138,6 @@ def configurar_menu_consulta(vista):
 
     :param vista: La instancia de la interfaz gráfica donde se gestionan los frames y los widgets de Tkinter.
     :type vista: tk.Toplevel o tk.Tk
-    :return: No devuelve ningún valor.
-    :rtype: None
     """
     #Escondemos el árbol orginal
     vista.tree.grid_forget()

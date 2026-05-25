@@ -1,5 +1,8 @@
-main module
-===========
+Componente Main
+===============
+
+Modulo main
+--------------------
 
 .. automodule:: main
    :members:
