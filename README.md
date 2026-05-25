@@ -4,6 +4,12 @@
 ![SQLite](https://img.shields.io/badge/Database-SQLite3-lightgrey.svg)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
+![CI Status](https://github.com/leanioqui/Curso-python/actions/workflows/ci.yml/badge.svg)
+![Install Status](https://github.com/leanioqui/Curso-python/actions/workflows/ci.yml/badge.svg?job=install)
+![Lint Status](https://github.com/leanioqui/Curso-python/actions/workflows/ci.yml/badge.svg?job=lint)
+![Format Status](https://github.com/leanioqui/Curso-python/actions/workflows/ci.yml/badge.svg?job=format)
+![Docs Status](https://github.com/leanioqui/Curso-python/actions/workflows/ci.yml/badge.svg?job=docs)
+
 Este proyecto nace como una solución tecnológica diseñada para empresas que necesitan centralizar y auditar el impacto ambiental de sus actividades operativas. El sistema permite registrar acciones, categorizarlas según su naturaleza (Física, Biológica o Socioeconómica) y cuantificar su incidencia de manera sistemática.
 
 ---
