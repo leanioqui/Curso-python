@@ -6,14 +6,15 @@ Este módulo define la clase Modelo, que se encarga de manejar la lógica de la 
 import sqlite3
 import os
 
+
 class Modelo:
     def __init__(self):
         self.con = self.crear_base_datos()
         self.crear_tabla()
-    
+
     def crear_base_datos(self):
         """
-        Este método crea o establece una conexión con la base de datos SQLite 
+        Este método crea o establece una conexión con la base de datos SQLite
         ubicada en la misma carpeta donde se encuentra el archivo actual.
 
         La función obtiene automáticamente la ruta absoluta del script en ejecución,
@@ -27,20 +28,20 @@ class Modelo:
         """
         # Buscamos la carpeta exacta donde está guardado este archivo .py
         carpeta_del_script = os.path.dirname(os.path.abspath(__file__))
-        
+
         # Creamos la ruta completa uniendo la carpeta con el nombre del archivo .db
         ruta_db = os.path.join(carpeta_del_script, "base_datos.db")
-        
+
         # Ahora siempre se conectará/creará en el lugar correcto (dentro de src/)
         con = sqlite3.connect(ruta_db)
         return con
 
-    def crear_tabla(self): 
+    def crear_tabla(self):
         """
         Este método crea la tabla ``empresa`` en la base de datos si todavía no existe.
 
         La tabla contiene cuatro columnas:
-        
+
         - ``id``: identificador único autoincremental.
         - ``categoria``: categoría del registro.
         - ``descripcion``: descripción del registro.
@@ -52,14 +53,18 @@ class Modelo:
         :param self: La instancia de la clase Modelo.
         :type self: Modelo
         """
-        cursor = self.con.cursor() #Crea un cursor para ejecutar comandos SQL en la base de datos
-        sql = "CREATE TABLE IF NOT EXISTS empresa (id INTEGER PRIMARY KEY AUTOINCREMENT, categoria TEXT, descripcion TEXT, impacto INTEGER)" #Define la consulta SQL para crear una tabla llamada "empresa" con cuatro columnas: id, categoría, descripción e impacto  
-        cursor.execute(sql) #Ejecuta la consulta SQL para crear la tabla en la base de datos
-        self.con.commit() #Guarda los cambios realizados en la base de datos
+        cursor = (
+            self.con.cursor()
+        )  # Crea un cursor para ejecutar comandos SQL en la base de datos
+        sql = "CREATE TABLE IF NOT EXISTS empresa (id INTEGER PRIMARY KEY AUTOINCREMENT, categoria TEXT, descripcion TEXT, impacto INTEGER)"  # Define la consulta SQL para crear una tabla llamada "empresa" con cuatro columnas: id, categoría, descripción e impacto
+        cursor.execute(
+            sql
+        )  # Ejecuta la consulta SQL para crear la tabla en la base de datos
+        self.con.commit()  # Guarda los cambios realizados en la base de datos
 
-    def alta_de_registro(self, categoria, desc, impacto): 
+    def alta_de_registro(self, categoria, desc, impacto):
         """
-        Este método inserta un nuevo registro en la tabla ``empresa`` 
+        Este método inserta un nuevo registro en la tabla ``empresa``
         de la base de datos.
 
         El registro almacenará una categoría, una descripción y un valor
@@ -75,14 +80,18 @@ class Modelo:
         :type impacto: int
         """
         cursor = self.con.cursor()
-        sql = "INSERT INTO empresa (categoria, descripcion, impacto) VALUES (?, ?, ?);" #Define la consulta SQL para insertar un registro en la tabla "empresa"
-        data = (categoria, desc, impacto) #Crea una tupla llamada "data" que contiene los valores de categoría, descripción e impacto que se van a insertar en la tabla "empresa".
+        sql = "INSERT INTO empresa (categoria, descripcion, impacto) VALUES (?, ?, ?);"  # Define la consulta SQL para insertar un registro en la tabla "empresa"
+        data = (
+            categoria,
+            desc,
+            impacto,
+        )  # Crea una tupla llamada "data" que contiene los valores de categoría, descripción e impacto que se van a insertar en la tabla "empresa".
         cursor.execute(sql, data)
         self.con.commit()
 
-    def baja_de_registro(self, mi_id): 
+    def baja_de_registro(self, mi_id):
         """
-        Este método elimina un registro de la tabla ``empresa`` 
+        Este método elimina un registro de la tabla ``empresa``
         utilizando su identificador único.
 
         La eliminación se realiza mediante una consulta SQL que busca
@@ -94,14 +103,14 @@ class Modelo:
         :type mi_id: int
         """
         cursor = self.con.cursor()
-        sql = "DELETE FROM empresa WHERE id = ?;" #Define la consulta SQL para eliminar un registro de la tabla "empresa"
-        data = (mi_id,) #Crea una tupla con la id del registro a eliminar
+        sql = "DELETE FROM empresa WHERE id = ?;"  # Define la consulta SQL para eliminar un registro de la tabla "empresa"
+        data = (mi_id,)  # Crea una tupla con la id del registro a eliminar
         cursor.execute(sql, data)
         self.con.commit()
 
-    def actualizar(self, categoria, desc, impacto, mi_id): 
+    def actualizar(self, categoria, desc, impacto, mi_id):
         """
-        Este método actualiza los datos de un registro existente 
+        Este método actualiza los datos de un registro existente
         en la tabla ``empresa``.
 
         La actualización se realiza utilizando el identificador único
@@ -120,14 +129,14 @@ class Modelo:
         :type mi_id: int
         """
         cursor = self.con.cursor()
-        sql = "UPDATE empresa SET categoria = ?, descripcion = ?, impacto = ? WHERE id = ?;" #Define la consulta SQL para actualizar un registro en la tabla "empresa"
+        sql = "UPDATE empresa SET categoria = ?, descripcion = ?, impacto = ? WHERE id = ?;"  # Define la consulta SQL para actualizar un registro en la tabla "empresa"
         data = (categoria, desc, impacto, mi_id)
         cursor.execute(sql, data)
         self.con.commit()
 
     def consultar_todos(self):
         """
-        Este método consulta y devuelve todos los registros almacenados 
+        Este método consulta y devuelve todos los registros almacenados
         en la tabla ``empresa``.
 
         Los registros se obtienen ordenados de forma descendente según
@@ -138,13 +147,17 @@ class Modelo:
         :return: Una lista con todas las filas obtenidas de la consulta SQL.
         :rtype: list
         """
-        cursor = self.con.cursor() #Crea un cursor para ejecutar comandos SQL en la base de datos
-        sql = "SELECT * FROM empresa ORDER BY id DESC;" #Define la consulta SQL para seleccionar todos los registros ordenados por id en orden ascendente
-        
-        tabla = cursor.execute(sql) #Ejecuta la conuslta.
-        tabla2 = tabla.fetchall() #Devuelve una lista con todas las filas resultantes de la consulta.
+        cursor = (
+            self.con.cursor()
+        )  # Crea un cursor para ejecutar comandos SQL en la base de datos
+        sql = "SELECT * FROM empresa ORDER BY id DESC;"  # Define la consulta SQL para seleccionar todos los registros ordenados por id en orden ascendente
+
+        tabla = cursor.execute(sql)  # Ejecuta la conuslta.
+        tabla2 = (
+            tabla.fetchall()
+        )  # Devuelve una lista con todas las filas resultantes de la consulta.
         return tabla2
-    
+
     def cerrar_base(self):
         """
         Este método cierra la conexión activa con la base de datos SQLite.

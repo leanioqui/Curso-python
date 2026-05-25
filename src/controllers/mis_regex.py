@@ -5,14 +5,18 @@ Actualmente, incluye un método para validar que solo se ingresen letras en cier
 """
 
 import re
+
+
 class MisRegex:
     def __init__(self):
 
-        self.filtro = re.compile(r'\D') #Crea un patrón de expresión regular que se usará para buscar caracteres no numéricos en el texto.
+        self.filtro = re.compile(
+            r"\D"
+        )  # Crea un patrón de expresión regular que se usará para buscar caracteres no numéricos en el texto.
 
     def solo_letras(self):
         """
-        Este método devuelve un patrón de expresión regular que se utiliza para validar 
+        Este método devuelve un patrón de expresión regular que se utiliza para validar
         que solo se ingresen letras en ciertos campos de la aplicación.
 
         :param self: La instancia de la clase MisRegex.
@@ -20,4 +24,6 @@ class MisRegex:
         :return: Un patrón de expresión regular que busca caracteres no numéricos.
         :rtype: re.Pattern
         """
-        return re.compile(r'\D') #Crea un patrón de expresión regular que se usará para buscar caracteres no numéricos en el texto.
+        return re.compile(
+            r"\D"
+        )  # Crea un patrón de expresión regular que se usará para buscar caracteres no numéricos en el texto.

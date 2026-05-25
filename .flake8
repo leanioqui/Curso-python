@@ -1,0 +1,13 @@
+[flake8]
+# Excluimos las dependencias externas y carpetas del sistema
+exclude = 
+    para_sphinx,
+    .venv,
+    __pycache__,
+    .git
+
+# Subimos el límite estricto para docstrings y comentarios largos de Sphinx
+max-line-length = 160
+
+# Ignoramos advertencias puramente cosméticas de espacios si Black ya formateó
+ignore = E203, W503, E501, W291
