@@ -10,7 +10,7 @@ En esta página encontrarás toda la información relacionada con el código del
 incluyendo su estructura, clases, funciones modularizadas y cómo se utilizan dentro del mismo.
 
 Introducción General
-====================
+--------------------
 
 Este sistema proporciona una solución tecnológica modular diseñada para centralizar, auditar y cuantificar 
 el impacto ambiental de las actividades operativas de una organización. A través de una metodología basada 
@@ -27,15 +27,17 @@ simplificada de tres niveles:
 * **0 (Impacto Neutro):** Actividades sin variaciones significativas en el entorno.
 * **1 (Impacto Positivo):** Acciones que favorecen la recuperación o mejora del medio ambiente.
 
-
 .. note::
    El software calcula de forma automática el impacto ambiental total y promedio de las operaciones para 
    facilitar la rápida identificación de áreas críticas.
+
 .. toctree::
    :maxdepth: 4
    :caption: Contenidos:
 
    main
+   servidor
    controllers
    models
    views
+   
