@@ -153,7 +153,7 @@ Curso-python/
 
 **Instalar dependencias:**
 ```bash
-cd para_sphinx
+cd para_sphinx\archivos\docs
 make html
 ```
 
