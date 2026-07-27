@@ -3,9 +3,10 @@ modelo.py:
 Este módulo define la clase Modelo, que se encarga de manejar la lógica de la aplicación y de interactuar con la base de datos.
 """
 
-import sqlite3
 import os
 import socket
+import sqlite3
+
 # ==============================================================================
 # PATRÓN OBSERVADOR: Clase que observa al Modelo y envía Logs por UDP
 # ==============================================================================
@@ -21,12 +22,10 @@ class LoggerObserver:
     def actualizar(self, mensaje):
         """Método invocado automáticamente cuando el Modelo notifica un cambio."""
         try:
-    
-            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            sock.sendto(mensaje.encode("utf-8"), (self.host, self.port))
-            sock.close()
+            with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
+                sock.sendto(mensaje.encode("utf-8"), (self.host, self.port))
         except Exception as e:
-            print(f"[LoggerObserver Error]: No se pudo enviar el log via UDP: {e}")
+            print(f"[LoggerObserver Error]: No se pudo enviar el log vía UDP: {e}")
 
 
 class Observable:
@@ -70,6 +69,8 @@ def notificar_observador(funcion):
         return resultado
 
     return envoltura
+
+
 class Modelo(Observable):
     def __init__(self):
         super().__init__()

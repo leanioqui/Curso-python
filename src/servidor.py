@@ -1,7 +1,7 @@
 """
 servidor.py:
-Este módulo implementa el servidor de logs independiente que escucha 
-peticiones UDP provenientes de la aplicación principal y las registra 
+Este módulo implementa el servidor de logs independiente que escucha
+peticiones UDP provenientes de la aplicación principal y las registra
 en un archivo de texto utilizando el módulo nativo ``logging``.
 """
 
@@ -18,27 +18,28 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(levelname)s:%(name)s:[%(asctime)s] %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
-    encoding="utf-8"
+    encoding="utf-8",
 )
 
 
 class ManejadorLogsUDP(socketserver.BaseRequestHandler):
     """
-    Clase manejadora que procesa los datagramas UDP entrantes enviados 
+    Clase manejadora que procesa los datagramas UDP entrantes enviados
     por la aplicación.
 
     Hereda de :class:`socketserver.BaseRequestHandler`.
     """
+
     def handle(self):
         """
         Método invocado automáticamente cada vez que se recibe un paquete UDP.
 
-        Extrae el mensaje enviado, la dirección IP/puerto de origen, 
+        Extrae el mensaje enviado, la dirección IP/puerto de origen,
         lo imprime en consola y lo guarda mediante el logger en ``app.log``.
         """
         # 1. Obtenemos los bytes enviados por el cliente y la IP/Puerto
         datos_bytes = self.request[0]
-        mensaje = datos_bytes.decode('utf-8').strip()
+        mensaje = datos_bytes.decode("utf-8").strip()
         ip_cliente, puerto_cliente = self.client_address
 
         # 2. Preparamos el mensaje del log
