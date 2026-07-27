@@ -48,6 +48,12 @@ class Observable:
             obs.actualizar(mensaje)
 
 def notificar_observador(funcion):
+    """
+    Decorador que emite un mensaje al Observador cada vez que se ejecuta una función
+    de Alta, Baja o Actualización de la base de datos.
+    
+    :return: La función decorada con la lógica de notificación.
+    """
     def envoltura(self, *args, **kwargs):
         resultado = funcion(self, *args, **kwargs)
         # 2. Construimos el mensaje del log según la función ejecutada
