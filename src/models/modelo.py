@@ -3,9 +3,10 @@ modelo.py:
 Este módulo define la clase Modelo, que se encarga de manejar la lógica de la aplicación y de interactuar con la base de datos.
 """
 
+import sqlite3
 import os
 import socket
-import sqlite3
+
 
 # ==============================================================================
 # PATRÓN OBSERVADOR: Clase que observa al Modelo y envía Logs por UDP
@@ -22,17 +23,19 @@ class LoggerObserver:
     def actualizar(self, mensaje):
         """Método invocado automáticamente cuando el Modelo notifica un cambio."""
         try:
-            with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
-                sock.sendto(mensaje.encode("utf-8"), (self.host, self.port))
+
+            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            sock.sendto(mensaje.encode("utf-8"), (self.host, self.port))
+            sock.close()
         except Exception as e:
-            print(f"[LoggerObserver Error]: No se pudo enviar el log vía UDP: {e}")
+            print(f"[LoggerObserver Error]: No se pudo enviar el log via UDP: {e}")
 
 
 class Observable:
     def __init__(self):
         # Lista de observadores para el Patrón Observador
         self._observadores = []
-        
+
         # Suscribimos automáticamente el observador de Logs UDP
         self.agregar_observador(LoggerObserver())
 
@@ -46,13 +49,8 @@ class Observable:
         for obs in self._observadores:
             obs.actualizar(mensaje)
 
+
 def notificar_observador(funcion):
-    """
-    Decorador que emite un mensaje al Observador cada vez que se ejecuta una función
-    de Alta, Baja o Actualización de la base de datos.
-    
-    :return: La función decorada con la lógica de notificación.
-    """
     def envoltura(self, *args, **kwargs):
         resultado = funcion(self, *args, **kwargs)
         # 2. Construimos el mensaje del log según la función ejecutada
@@ -154,13 +152,11 @@ class Modelo(Observable):
         )  # Crea una tupla llamada "data" que contiene los valores de categoría, descripción e impacto que se van a insertar en la tabla "empresa".
         cursor.execute(sql, data)
         self.con.commit()
-        # 💡 ACÁ ESTÁ LA CLAVE: 
         # cursor.lastrowid nos da el ID exacto que acaba de asignar SQLite automáticamente
         nuevo_id = cursor.lastrowid 
-        
+
         # Retornamos los datos completos (incluido el ID) para que el decorador los capture
         return {"id": nuevo_id, "categoria": categoria, "descripcion": desc, "impacto": impacto}
-
 
     @notificar_observador
     def baja_de_registro(self, mi_id):
