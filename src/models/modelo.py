@@ -16,6 +16,7 @@ class LoggerObserver:
     Observador que recibe notificaciones del decorador y las envía por socket UDP
     al servidor de logs.
     """
+
     def __init__(self, host="localhost", port=9999):
         self.host = host
         self.port = port
@@ -153,10 +154,15 @@ class Modelo(Observable):
         cursor.execute(sql, data)
         self.con.commit()
         # cursor.lastrowid nos da el ID exacto que acaba de asignar SQLite automáticamente
-        nuevo_id = cursor.lastrowid 
+        nuevo_id = cursor.lastrowid
 
         # Retornamos los datos completos (incluido el ID) para que el decorador los capture
-        return {"id": nuevo_id, "categoria": categoria, "descripcion": desc, "impacto": impacto}
+        return {
+            "id": nuevo_id,
+            "categoria": categoria,
+            "descripcion": desc,
+            "impacto": impacto,
+        }
 
     @notificar_observador
     def baja_de_registro(self, mi_id):

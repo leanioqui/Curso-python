@@ -37,25 +37,25 @@ class ManejadorLogsUDP(socketserver.BaseRequestHandler):
         Extrae el mensaje enviado, la dirección IP/puerto de origen,
         lo imprime en consola y lo guarda mediante el logger en ``app.log``.
         """
-        # 1. Obtenemos los bytes enviados por el cliente y la IP/Puerto
+        # Obtenemos los bytes enviados por el cliente y la IP/Puerto
         datos_bytes = self.request[0]
         mensaje = datos_bytes.decode("utf-8").strip()
         ip_cliente, puerto_cliente = self.client_address
 
-        # 2. Preparamos el mensaje del log
+        # Preparamos el mensaje del log
         registro = f"[{ip_cliente}:{puerto_cliente}] -> {mensaje}"
 
-        # 3. Muestra en pantalla el log recibido
-        print(f"📥 [LOG RECIBIDO]: {registro}")
+        # Muestra en pantalla el log recibido
+        print(f"[LOG RECIBIDO]: {registro}")
 
-        # 4. Guarda el log usando el módulo logging nativo
+        # Guarda el log usando el módulo logging nativo
         logging.info(registro)
 
 
 if __name__ == "__main__":
     HOST, PORT = "localhost", 9999
     print("=" * 60)
-    print(f" SERVIDOR DE LOGS UDP EN EJECUCIÓN INICIADO")
+    print(" SERVIDOR DE LOGS UDP EN EJECUCIÓN INICIADO")
     print(f" Escuchando peticiones en {HOST}:{PORT}")
     print(" Presiona Ctrl+C para detener el servidor")
     print("=" * 60)
