@@ -50,6 +50,7 @@ class Observable:
     Permite que los observadores se registren y reciban notificaciones de cambios.
     :type self: Observable
     """
+
     def __init__(self):
         """
         Inicializa la lista de observadores y suscribe automáticamente
@@ -97,6 +98,7 @@ def notificar_observador(funcion):
     :return: La función envuelta que notifica a los observadores después de su ejecución.
     :rtype: function
     """
+
     def envoltura(self, *args, **kwargs):
         resultado = funcion(self, *args, **kwargs)
         # Construimos el mensaje del log según la función ejecutada
