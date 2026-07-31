@@ -18,13 +18,25 @@ class LoggerObserver:
     """
 
     def __init__(self, host="localhost", port=9999):
+        """
+        Inicializa la instancia del observador con la dirección y puerto del servidor UDP.
+
+        :param host: Dirección IP o nombre de host del servidor de logs.
+        :type host: str
+        :param port: Puerto en el que el servidor de logs escucha las conexiones.
+        :type port: int
+        """
         self.host = host
         self.port = port
 
     def actualizar(self, mensaje):
-        """Método invocado automáticamente cuando el Modelo notifica un cambio."""
-        try:
+        """
+        Envía un mensaje de registro formateado al servidor de logs mediante un socket UDP.
 
+        :param mensaje: El contenido del log que se enviará al servidor.
+        :type mensaje: str
+        """
+        try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             sock.sendto(mensaje.encode("utf-8"), (self.host, self.port))
             sock.close()
@@ -33,7 +45,16 @@ class LoggerObserver:
 
 
 class Observable:
+    """
+    Clase base que implementa el Patrón Observador.
+    Permite que los observadores se registren y reciban notificaciones de cambios.
+    :type self: Observable
+    """
     def __init__(self):
+        """
+        Inicializa la lista de observadores y suscribe automáticamente
+        el observador de logs por UDP.
+        """
         # Lista de observadores para el Patrón Observador
         self._observadores = []
 
@@ -42,19 +63,42 @@ class Observable:
 
     # --- Métodos del Patrón Observador ---
     def agregar_observador(self, observador):
-        """Registra un nuevo observador."""
+        """
+        Agrega un nuevo observador a la lista de suscritos.
+
+        :param observador:
+        :type observador: object
+        """
         self._observadores.append(observador)
 
     def notificar_observadores(self, mensaje):
-        """Notifica a todos los observadores registrados."""
+        """
+        Itera sobre todos los observadores registrados e invoca su método ``actualizar``
+        pasándoles el mensaje especificado.
+
+        :param mensaje: Mensaje o evento que se transmitirá a cada observador.
+        :type mensaje: str
+        """
         for obs in self._observadores:
             obs.actualizar(mensaje)
 
-
 def notificar_observador(funcion):
+    """
+    Este decorador envuelve las funciones del Modelo que realizan cambios en la base de datos.
+    Después de ejecutar la función original, construye un mensaje de log y notifica a los observadores registrados.
+
+    - ``alta``: Registra el ID y la categoría a partir del resultado.
+    - ``baja``: Registra el ID pasado como argumento.
+    - ``otras acciones``: Registra la categoría, descripción, impacto e ID.
+
+    :param funcion: La función del Modelo que se va a envolver.
+    :type funcion: function
+    :return: La función envuelta que notifica a los observadores después de su ejecución.
+    :rtype: function
+    """
     def envoltura(self, *args, **kwargs):
         resultado = funcion(self, *args, **kwargs)
-        # 2. Construimos el mensaje del log según la función ejecutada
+        #Construimos el mensaje del log según la función ejecutada
         nombre_accion = funcion.__name__.replace("_", " ").upper()
         if "alta" in funcion.__name__:
             mensaje = f"ACCION: {nombre_accion} | ID: {resultado['id']} | Categoria: {resultado['categoria']}"
