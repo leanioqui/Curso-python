@@ -82,6 +82,7 @@ class Observable:
         for obs in self._observadores:
             obs.actualizar(mensaje)
 
+
 def notificar_observador(funcion):
     """
     Este decorador envuelve las funciones del Modelo que realizan cambios en la base de datos.
@@ -98,7 +99,7 @@ def notificar_observador(funcion):
     """
     def envoltura(self, *args, **kwargs):
         resultado = funcion(self, *args, **kwargs)
-        #Construimos el mensaje del log según la función ejecutada
+        # Construimos el mensaje del log según la función ejecutada
         nombre_accion = funcion.__name__.replace("_", " ").upper()
         if "alta" in funcion.__name__:
             mensaje = f"ACCION: {nombre_accion} | ID: {resultado['id']} | Categoria: {resultado['categoria']}"
